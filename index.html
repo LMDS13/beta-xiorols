@@ -2,7 +2,12 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#fef9f3" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="format-detection" content="telephone=no" />
   <title>Xio Rolls - Roles de Canela &amp; Fresas Frescas</title>
   <link href="https://fonts.googleapis.com" rel="preconnect" />
   <link crossorigin href="https://fonts.gstatic.com" rel="preconnect" />
@@ -99,22 +104,113 @@
       padding: 0;
     }
 
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      height: -webkit-fill-available;
+    }
+
     body {
       font-family: var(--font-main);
       background-color: var(--bg-cream);
       color: var(--text-dark);
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overscroll-behavior-y: none;
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      min-height: 100dvh;
     }
 
-    #bg-canvas {
+    /* ===== FONDO ATMOSFÉRICO ULTRA LIGERO (CSS only – casi 0 GPU/CPU) ===== */
+    /* Solo transforms + opacity. Sin filter:blur, sin canvas, sin requestAnimationFrame */
+    #bg-atmosphere {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       z-index: -1;
       pointer-events: none;
-      opacity: 0.6;
+      overflow: hidden;
+      opacity: 0.7;
+    }
+
+    #bg-atmosphere .blob {
+      position: absolute;
+      border-radius: 50%;
+      will-change: transform;
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+    }
+
+    #bg-atmosphere .blob-1 {
+      width: 60vmax;
+      height: 60vmax;
+      top: -18%;
+      left: -22%;
+      background: radial-gradient(circle at 40% 40%,
+        rgba(255, 195, 170, 0.42) 0%,
+        rgba(255, 210, 190, 0.18) 42%,
+        transparent 72%);
+      animation: atmosphereDrift1 28s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+    }
+
+    #bg-atmosphere .blob-2 {
+      width: 52vmax;
+      height: 52vmax;
+      bottom: -22%;
+      right: -16%;
+      background: radial-gradient(circle at 55% 55%,
+        rgba(255, 225, 205, 0.36) 0%,
+        rgba(250, 235, 215, 0.14) 48%,
+        transparent 74%);
+      animation: atmosphereDrift2 34s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+    }
+
+    #bg-atmosphere .blob-3 {
+      width: 42vmax;
+      height: 42vmax;
+      top: 28%;
+      left: 38%;
+      background: radial-gradient(circle at 50% 50%,
+        rgba(255, 240, 220, 0.26) 0%,
+        transparent 70%);
+      animation: atmosphereDrift3 24s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+    }
+
+    /* Movimiento orgánico y fluido (más pasos = más natural) */
+    @keyframes atmosphereDrift1 {
+      0%   { transform: translate3d(0%, 0%, 0) scale(1) rotate(0deg); }
+      33%  { transform: translate3d(4%, 3%, 0) scale(1.06) rotate(1.5deg); }
+      66%  { transform: translate3d(2%, 6%, 0) scale(1.03) rotate(-1deg); }
+      100% { transform: translate3d(6%, 2%, 0) scale(1.08) rotate(0.5deg); }
+    }
+    @keyframes atmosphereDrift2 {
+      0%   { transform: translate3d(0%, 0%, 0) scale(1) rotate(0deg); }
+      33%  { transform: translate3d(-5%, -2%, 0) scale(1.05) rotate(-1.5deg); }
+      66%  { transform: translate3d(-2%, -6%, 0) scale(1.09) rotate(1deg); }
+      100% { transform: translate3d(-4%, -4%, 0) scale(1.04) rotate(-0.5deg); }
+    }
+    @keyframes atmosphereDrift3 {
+      0%   { transform: translate3d(0%, 0%, 0) scale(1) rotate(0deg); }
+      50%  { transform: translate3d(-3%, 5%, 0) scale(1.07) rotate(1deg); }
+      100% { transform: translate3d(3%, -3%, 0) scale(0.97) rotate(-1deg); }
+    }
+
+    /* En móviles de gama baja reducimos un poco el tamaño para aún menos overdraw */
+    @media (max-width: 768px) {
+      #bg-atmosphere {
+        opacity: 0.55;
+      }
+      #bg-atmosphere .blob-1 { width: 70vmax; height: 70vmax; }
+      #bg-atmosphere .blob-2 { width: 58vmax; height: 58vmax; }
+      #bg-atmosphere .blob-3 { width: 45vmax; height: 45vmax; }
+    }
+
+    /* Prefer reduced motion → completamente estático */
+    @media (prefers-reduced-motion: reduce) {
+      #bg-atmosphere .blob {
+        animation: none !important;
+      }
     }
 
     /* HEADER TRANSPARENTE (SOLO LOGO, DESAPARECE AL SCROLL) */
@@ -143,8 +239,10 @@
 
     .hero {
       position: relative;
-      width: 100vw;
+      width: 100%;
       height: 100vh;
+      height: 100dvh;
+      min-height: -webkit-fill-available;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -163,6 +261,8 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      object-position: center;
+      -webkit-playsinline: true;
     }
 
     .hero-content {
@@ -173,33 +273,42 @@
     }
 
     .hero-title-sub {
-      font-size: 1.2rem;
+      font-size: clamp(0.85rem, 2.8vw, 1.2rem);
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 4px;
+      letter-spacing: 0.2em;
       color: var(--accent-red);
       margin-bottom: 10px;
+      max-width: 100%;
+      padding: 0 8px;
     }
 
     .hero-title-main {
-      font-size: clamp(3rem, 9vw, 8rem);
+      font-size: clamp(2.1rem, 9vw, 8rem);
       font-weight: 900;
-      line-height: 0.9;
+      line-height: 0.95;
       text-transform: uppercase;
       color: var(--text-dark);
       text-shadow: 0 10px 30px rgba(255, 255, 255, 0.8);
+      max-width: 100%;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      hyphens: auto;
+      padding: 0 4px;
     }
 
     .hero-banner-box {
       display: inline-block;
       background: var(--text-dark);
       color: #fff;
-      padding: 10px 30px;
-      font-size: clamp(1.2rem, 3vw, 2.5rem);
+      padding: 10px 24px;
+      font-size: clamp(0.95rem, 3vw, 2.5rem);
       font-weight: 900;
       text-transform: uppercase;
       margin-top: 15px;
       transform: rotate(-2deg);
+      max-width: calc(100% - 16px);
+      overflow-wrap: break-word;
     }
 
     #hero-sub, #hero-main, #hero-banner {
@@ -210,6 +319,7 @@
       background-color: var(--bg-red-brand);
       color: #ffffff;
       min-height: 85vh;
+      min-height: 85dvh;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -221,13 +331,17 @@
     .statement-container {
       max-width: 1200px;
       margin: 0 auto;
+      width: 100%;
     }
     .statement-text {
-      font-size: clamp(2.2rem, 5.8vw, 5.5rem);
+      font-size: clamp(1.7rem, 5.8vw, 5.5rem);
       font-weight: 900;
-      line-height: 1.1;
+      line-height: 1.15;
       text-transform: uppercase;
       letter-spacing: -1.5px;
+      max-width: 100%;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
     .badge-box {
       display: inline-block;
@@ -260,34 +374,34 @@
       background-color: var(--bg-cream);
       transition: background-color 0.8s var(--ease-out-expo);
       overflow: hidden;
-      width: 100vw;
+      width: 100%;
       height: 100vh;
+      height: 100dvh;
+      min-height: -webkit-fill-available;
     }
     .products-dynamic-bg {
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 120vw;
-      height: 120vh;
+      width: 70vw;
+      height: 70vh;
       transform: translate(-50%, -50%);
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.8s var(--ease-out-expo);
-      will-change: opacity;
-    }
-    .products-dynamic-bg::before {
-      content: '';
-      position: absolute;
-      inset: 0;
       border-radius: 50%;
-      background: radial-gradient(
-        circle at center,
-        var(--glow-color, transparent) 0%,
-        transparent 70%
-      );
-      opacity: 0.35;
-      transition: background 0.9s var(--ease-out-expo);
+      filter: blur(160px);
+      opacity: 1;
+      z-index: 0;
+      background-color: transparent;
+      transition: background-color 0.9s var(--ease-out-expo);
+      pointer-events: none;
+      will-change: background-color;
+    }
+
+    @media (max-width: 768px) {
+      .products-dynamic-bg {
+        width: 90vw;
+        height: 60vh;
+        filter: blur(90px); /* mucho más barato en móvil */
+      }
     }
     .spylt-scroll-container {
       display: flex;
@@ -325,10 +439,13 @@
       z-index: 1;
       transform-style: preserve-3d;
       transition: transform 0.1s ease-out;
+      touch-action: pan-y;
+      will-change: transform;
     }
     .product-card .spylt-image-only {
       transform-style: preserve-3d;
       backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
     }
     .spylt-image-only {
       width: 720px;
@@ -337,6 +454,9 @@
       filter: drop-shadow(0 30px 40px rgba(0,0,0,0.15));
       transition: transform 0.6s var(--ease-out-expo), filter 0.6s var(--ease-out-expo);
       cursor: pointer;
+      will-change: transform;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
     }
     .product-card:hover .spylt-image-only,
     .product-card.active-center .spylt-image-only {
@@ -490,9 +610,43 @@
 
     @media (max-width: 768px) {
       .spylt-header-block { width: 85vw; min-width: unset; }
-      .spylt-image-only { width: 300px; }
-      .spylt-cards-track { gap: 40px; }
-      .lifestyle-grid { grid-template-columns: 1fr; }
+      .spylt-image-only { width: 280px; }
+      .spylt-cards-track { gap: 32px; }
+      .lifestyle-grid { grid-template-columns: 1fr; gap: 16px; padding: 60px 4%; }
+      .statement-section { padding: 80px 5%; min-height: 70vh; min-height: 70dvh; }
+      .statement-text { letter-spacing: -0.8px; }
+      .badge-box { padding: 5px 14px; margin: 0 4px; font-size: 0.95em; }
+      #historia { padding: 100px 6%; }
+      .history-title { font-size: clamp(2.8rem, 10vw, 5rem); margin-bottom: 28px; }
+      .history-text { font-size: 1.1rem; line-height: 1.7; }
+      .sensory-guide { padding: 90px 6%; }
+      .sensory-guide h2 { font-size: clamp(2.4rem, 9vw, 4.5rem) !important; }
+      .editorial-number { font-size: 5rem; top: -20px; left: -10px; }
+      .hero-content { padding: 0 16px; }
+      footer { padding: 70px 5% 50px; }
+      .btn-whatsapp { padding: 16px 32px; font-size: 1rem; }
+      .spylt-header-title { font-size: clamp(2.6rem, 9vw, 4.5rem); letter-spacing: -1px; }
+      .floating-ornament { font-size: 22vw; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title-main { font-size: clamp(1.85rem, 8.5vw, 3.2rem); line-height: 1; }
+      .hero-title-sub { letter-spacing: 0.15em; font-size: clamp(0.75rem, 2.5vw, 0.95rem); }
+      .hero-banner-box { padding: 8px 16px; font-size: clamp(0.85rem, 3.2vw, 1.3rem); }
+      .spylt-image-only { width: 240px; }
+      .spylt-cards-track { gap: 24px; }
+      .spylt-header-block { width: 90vw; margin-right: 4vw; }
+      .statement-text { font-size: clamp(1.45rem, 6.5vw, 2.4rem); line-height: 1.2; }
+      .history-title { font-size: clamp(2.4rem, 11vw, 3.8rem); }
+      .btn-whatsapp { width: 100%; max-width: 320px; text-align: center; box-sizing: border-box; }
+      #site-header { top: 14px; left: 14px; }
+      #site-header .logo { font-size: 1.4rem; }
+    }
+
+    @media (max-width: 360px) {
+      .hero-title-main { font-size: clamp(1.6rem, 8vw, 2.6rem); }
+      .spylt-image-only { width: 210px; }
+      .statement-text { font-size: clamp(1.3rem, 6vw, 2rem); }
     }
 
     .motion-reveal span,
@@ -771,7 +925,12 @@
   <div class="custom-cursor" id="custom-cursor"></div>
   <div class="custom-cursor-dot" id="custom-cursor-dot"></div>
 
-  <canvas id="bg-canvas"></canvas>
+  <!-- Fondo atmosférico ultra ligero (CSS only) -->
+  <div id="bg-atmosphere" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
 
   <header id="site-header">
     <div class="logo">XIO <span>Rolls</span></div>
@@ -779,7 +938,7 @@
 
   <section class="hero">
     <div class="hero-video-container">
-      <video id="hero-video" muted playsinline src="Cinnamon_rolls_emerge_float_drift_202607202209.mp4"></video>
+      <video id="hero-video" muted playsinline webkit-playsinline preload="metadata" src="Cinnamon_rolls_emerge_float_drift_202607202209.mp4"></video>
     </div>
     <div class="hero-content" id="hero-text">
       <div class="hero-title-sub" id="hero-sub">Horneados al momento • Creados con devoción</div>
@@ -813,34 +972,34 @@
         </div>
         <div class="spylt-cards-track">
           <div class="product-card" data-bg="#51AFF7">
-            <img alt="Rol de Fresas con Crema" class="spylt-image-only" src="/img/rol (1).png" />
+            <img alt="Rol de Fresas con Crema" class="spylt-image-only" src="/img/rol (1).png" decoding="async" />
           </div>
           <div class="product-card" data-bg="#EE7C62">
-            <img alt="Rol Doble Crema" class="spylt-image-only" src="/img/rol (2).png" />
+            <img alt="Rol Doble Crema" class="spylt-image-only" src="/img/rol (2).png" decoding="async" />
           </div>
           <div class="product-card" data-bg="#642B15">
-            <img alt="Pack Familiar" class="spylt-image-only" src="/img/rol (3).png" />
+            <img alt="Pack Familiar" class="spylt-image-only" src="/img/rol (3).png" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#BD9EF4">
-            <img alt="Pack Familiar" class="spylt-image-only" src="/img/rol (4).png" />
+            <img alt="Pack Familiar" class="spylt-image-only" src="/img/rol (4).png" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#CF805B">
-            <img alt="Pack Familiar" class="spylt-image-only" src="/img/rol (5).png" />
+            <img alt="Pack Familiar" class="spylt-image-only" src="/img/rol (5).png" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#EED7B0">
-            <img alt="Pack Familiar" class="spylt-image-only" src="/img/rol (6).png" />
+            <img alt="Pack Familiar" class="spylt-image-only" src="/img/rol (6).png" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#B97242">
-            <img alt="Pack Familiar" class="spylt-image-only" src="/img/rol (7).png" />
+            <img alt="Pack Familiar" class="spylt-image-only" src="/img/rol (7).png" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#F1D4AD">
-            <img alt="Pack Familiar" class="spylt-image-only" src="/img/rol (8).png" />
+            <img alt="Pack Familiar" class="spylt-image-only" src="/img/rol (8).png" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#C7835A">
-            <img alt="Pack Familiar" class="spylt-image-only" src="/img/rol (9).png" />
+            <img alt="Pack Familiar" class="spylt-image-only" src="/img/rol (9).png" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#25766D">
-            <img alt="Pack Familiar" class="spylt-image-only" src="/img/rol (10).png" />
+            <img alt="Pack Familiar" class="spylt-image-only" src="/img/rol (10).png" loading="lazy" decoding="async" />
           </div>
         </div>
       </div>
@@ -874,7 +1033,7 @@
     <div class="floating-ornament top-20 -left-10" id="bg-text-1">Tradición</div>
     <div class="history-wrapper">
       <div class="history-image img-reveal-wrapper" id="history-parallax-1">
-        <img alt="Masa artesanal" class="history-img" src="/img/Nust_Herrencia.jpeg" />
+        <img alt="Masa artesanal" class="history-img" src="/img/Nust_Herrencia.jpeg" loading="lazy" decoding="async" />
       </div>
       <div class="history-content">
         <span class="vintage-label">Est. 2026 • El Origen</span>
@@ -912,7 +1071,7 @@
       <div class="relative motion-reveal">
         <div class="absolute -inset-4 border border-primary/10 rounded-lg -rotate-3"></div>
         <div class="img-reveal-wrapper alt rounded-lg overflow-hidden relative z-10">
-        <img alt="Boutique setup" class="rounded-lg shadow-2xl relative z-10 w-full aspect-[4/5] object-cover img-reveal-target" src="/img/Compromiso_Local.jpeg" />
+        <img alt="Boutique setup" class="rounded-lg shadow-2xl relative z-10 w-full aspect-[4/5] object-cover img-reveal-target" src="/img/Compromiso_Local.jpeg" loading="lazy" decoding="async" />
         </div>
       </div>
     </div>
@@ -926,22 +1085,22 @@
     <div class="lifestyle-grid">
       <div class="lifestyle-item col-span-12 md:col-span-4 row-span-2 motion-reveal" style="height:600px;">
         <div class="img-reveal-wrapper h-full w-full">
-        <img alt="Lifestyle 1" src="/img/momentos_xio2.png" />
+        <img alt="Lifestyle 1" src="/img/momentos_xio2.png" loading="lazy" decoding="async" />
         </div>
       </div>
       <div class="lifestyle-item col-span-12 md:col-span-8 h-[300px] motion-reveal">
         <div class="img-reveal-wrapper h-full w-full alt">
-        <img alt="Lifestyle 2" src="/img/momentos_xio.jpeg" />
+        <img alt="Lifestyle 2" src="/img/momentos_xio.jpeg" loading="lazy" decoding="async" />
         </div>
       </div>
       <div class="lifestyle-item col-span-12 md:col-span-4 h-[280px] mt-4 motion-reveal">
         <div class="img-reveal-wrapper h-full w-full">
-        <img alt="Lifestyle 3" src="/img/momentos_xio3.jpeg" />
+        <img alt="Lifestyle 3" src="/img/momentos_xio3.jpeg" loading="lazy" decoding="async" />
         </div>
       </div>
       <div class="lifestyle-item col-span-12 md:col-span-4 h-[280px] -mt-10 md:mt-4 z-20 shadow-xl motion-reveal">
         <div class="img-reveal-wrapper h-full w-full alt">
-        <img alt="Lifestyle 4" src="/img/image.png" />
+        <img alt="Lifestyle 4" src="/img/image.png" loading="lazy" decoding="async" />
         </div>
       </div>
     </div>
@@ -957,7 +1116,7 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
         <div class="group motion-reveal">
           <div class="overflow-hidden rounded-lg mb-8 aspect-square bg-white shadow-xl">
-            <img alt="Trío Esencial" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="./img/trio_roles.jpg" />
+            <img alt="Trío Esencial" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="./img/trio_roles.jpg" loading="lazy" decoding="async" />
           </div>
           <h3 class="text-2xl font-black text-charcoal-text mb-2 uppercase">Trío Esencial</h3>
           <p class="text-on-surface-variant font-light leading-relaxed mb-4">Una selección curada de nuestros tres sabores insignia, perfectos para una cata personal.</p>
@@ -965,7 +1124,7 @@
         </div>
         <div class="group motion-reveal">
           <div class="overflow-hidden rounded-lg mb-8 aspect-square bg-white shadow-xl">
-            <img alt="Cuarteto Clásico" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="./img/cuarteto.jpg" />
+            <img alt="Cuarteto Clásico" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="./img/cuarteto.jpg" loading="lazy" decoding="async" />
           </div>
           <h3 class="text-2xl font-black text-charcoal-text mb-2 uppercase">Cuarteto Clásico</h3>
           <p class="text-on-surface-variant font-light leading-relaxed mb-4">Cuatro piezas de masa madre y canela Ceylán, el equilibrio ideal entre suavidad y frescura.</p>
@@ -973,7 +1132,7 @@
         </div>
         <div class="group motion-reveal">
           <div class="overflow-hidden rounded-lg mb-8 aspect-square bg-white shadow-xl">
-            <img alt="Degustación Elite" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="./img/seis_roles.jpg" />
+            <img alt="Degustación Elite" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="./img/seis_roles.jpg" loading="lazy" decoding="async" />
           </div>
           <h3 class="text-2xl font-black text-charcoal-text mb-2 uppercase">Degustación Especial</h3>
           <p class="text-on-surface-variant font-light leading-relaxed mb-4">La experiencia definitiva: seis mini roles con glaseados premium y fresas de temporada.</p>
@@ -1040,26 +1199,23 @@
     <p style="margin-top:60px; font-size:0.8rem; opacity:0.4;">© 2026 Xio Rolls. Made with love.</p>
   </footer>
 
-  <script id="fragmentShader" type="x-shader/x-fragment">
-    precision highp float;
-    varying vec2 v_texCoord;
-    uniform float u_time;
-    uniform vec2 u_resolution;
 
-    void main() {
-      vec2 uv = v_texCoord;
-      float noise = sin(uv.x * 3.0 + u_time * 0.5) * cos(uv.y * 3.0 + u_time * 0.4);
-      noise += sin(uv.x * 5.0 - u_time * 0.7) * cos(uv.y * 2.0 + u_time * 0.3) * 0.5;
-      vec3 color1 = vec3(0.98, 0.96, 0.94);
-      vec3 color2 = vec3(0.96, 0.92, 0.88);
-      vec3 finalColor = mix(color1, color2, clamp(noise * 0.3 + 0.5, 0.0, 1.0));
-      gl_FragColor = vec4(finalColor, 1.0);
-    }
-  </script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
+      // ========== MOBILE / PERFORMANCE DETECTION ==========
+      const isCoarse = window.matchMedia('(pointer: coarse)').matches;
+      const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const isMobile = isCoarse || isMobileUA || window.innerWidth < 768;
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
       // ========== LENIS SMOOTH SCROLL ==========
-      const lenis = new Lenis({ lerp: 0.08, smoothWheel: true });
+      // Slightly higher lerp on mobile for stability and closer to 60fps feel
+      const lenis = new Lenis({
+        lerp: isMobile ? 0.12 : 0.08,
+        smoothWheel: !isMobile,
+        syncTouch: true,
+        touchMultiplier: isMobile ? 1.2 : 1
+      });
       lenis.on('scroll', ScrollTrigger.update);
       gsap.ticker.add((time) => lenis.raf(time * 1000));
       gsap.ticker.lagSmoothing(0);
@@ -1069,74 +1225,53 @@
       const heroMainEl = document.getElementById('hero-main');
       const heroSubEl = document.getElementById('hero-sub');
       const heroBannerEl = document.getElementById('hero-banner');
+      const video = document.getElementById("hero-video");
 
       function hidePreloader() {
         preloader.classList.add('hidden');
         lenis.start();
         // Start hero video only after preloader is gone
-        video.play().catch(() => {});
+        if (video) video.play().catch(() => {});
         initTypewriter();
       }
       lenis.stop();
 
       setTimeout(() => {
         hidePreloader();
-      }, 2800);
+      }, isMobile ? 2200 : 2800);
 
-      // ========== CURSOR PERSONALIZADO ==========
+      // ========== CURSOR PERSONALIZADO (solo fine pointer) ==========
       const cursor = document.getElementById('custom-cursor');
       const cursorDot = document.getElementById('custom-cursor-dot');
-      let mouseX = 0, mouseY = 0;
-      let cursorX = 0, cursorY = 0;
+      if (!isCoarse && cursor && cursorDot) {
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
 
-      document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        cursorDot.style.left = mouseX + 'px';
-        cursorDot.style.top = mouseY + 'px';
-        if (!cursor.classList.contains('visible')) {
-          cursor.classList.add('visible');
-          cursorDot.classList.add('visible');
+        document.addEventListener('mousemove', (e) => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          cursorDot.style.left = mouseX + 'px';
+          cursorDot.style.top = mouseY + 'px';
+          if (!cursor.classList.contains('visible')) {
+            cursor.classList.add('visible');
+            cursorDot.classList.add('visible');
+          }
+        }, { passive: true });
+
+        function animateCursor() {
+          cursorX += (mouseX - cursorX) * 0.15;
+          cursorY += (mouseY - cursorY) * 0.15;
+          cursor.style.left = cursorX + 'px';
+          cursor.style.top = cursorY + 'px';
+          requestAnimationFrame(animateCursor);
         }
-      });
+        animateCursor();
 
-      function animateCursor() {
-        cursorX += (mouseX - cursorX) * 0.15;
-        cursorY += (mouseY - cursorY) * 0.15;
-        cursor.style.left = cursorX + 'px';
-        cursor.style.top = cursorY + 'px';
-        requestAnimationFrame(animateCursor);
-      }
-      animateCursor();
-
-      const hoverTargets = 'a, button, .product-card, .faq-question, .lifestyle-item, .btn-whatsapp, .badge-box';
-      document.querySelectorAll(hoverTargets).forEach(el => {
-        el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
-        el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
-      });
-
-      // ========== WEBGL BACKGROUND ==========
-      const canvas = document.getElementById('bg-canvas');
-      const gl = canvas.getContext('webgl');
-      if (gl) {
-        const program = gl.createProgram();
-        const vsSource = `attribute vec4 a_position; varying vec2 v_texCoord; void main() { gl_Position = a_position; v_texCoord = a_position.xy * 0.5 + 0.5; }`;
-        const fsSource = document.getElementById('fragmentShader').textContent;
-        function createShader(gl, type, source) { const shader = gl.createShader(type); gl.shaderSource(shader, source); gl.compileShader(shader); return shader; }
-        const vs = createShader(gl, gl.VERTEX_SHADER, vsSource);
-        const fs = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
-        gl.attachShader(program, vs); gl.attachShader(program, fs); gl.linkProgram(program); gl.useProgram(program);
-        const positionBuffer = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
-        const positionLoc = gl.getAttribLocation(program, "a_position"); gl.enableVertexAttribArray(positionLoc);
-        gl.vertexAttribPointer(positionLoc, 2, gl.FLOAT, false, 0, 0);
-        const timeLoc = gl.getUniformLocation(program, "u_time");
-        function render(time) {
-          canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-          gl.viewport(0, 0, canvas.width, canvas.height); gl.uniform1f(timeLoc, time * 0.001);
-          gl.drawArrays(gl.TRIANGLES, 0, 6); requestAnimationFrame(render);
-        }
-        requestAnimationFrame(render);
+        const hoverTargets = 'a, button, .product-card, .faq-question, .lifestyle-item, .btn-whatsapp, .badge-box';
+        document.querySelectorAll(hoverTargets).forEach(el => {
+          el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+          el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+        });
       }
 
       // ========== TYPEWRITER HERO ==========
@@ -1202,13 +1337,14 @@
         animate(heroBannerWords, { opacity: [0, 1], y: [30, 0] }, { duration: 0.8, delay: stagger(0.05, { start: 0.15 }), easing: [0.22, 1, 0.36, 1] });
       }
 
-      const video = document.getElementById("hero-video");
-      video.addEventListener("timeupdate", () => { 
-        if (video.currentTime > video.duration * 0.4 && !restRevealed) revealRestOfHero(); 
-      });
+      if (video) {
+        video.addEventListener("timeupdate", () => { 
+          if (video.currentTime > video.duration * 0.4 && !restRevealed) revealRestOfHero(); 
+        }, { passive: true });
+      }
       window.addEventListener("scroll", () => { 
         if (window.scrollY > 40 && !restRevealed) revealRestOfHero(); 
-      });
+      }, { passive: true });
 
       document.querySelectorAll(".motion-reveal").forEach((el) => {
         const words = splitTextIntoWords(el);
@@ -1254,8 +1390,7 @@
         if (closestCard && dynamicBg) {
           const bgColor = closestCard.getAttribute('data-bg');
           if (bgColor) {
-            dynamicBg.style.setProperty('--glow-color', bgColor);
-            dynamicBg.style.opacity = '1';
+            dynamicBg.style.backgroundColor = bgColor;
           }
         }
       }
@@ -1273,8 +1408,8 @@
             end: () => `+=${scrollTrack.scrollWidth}`,
             pin: true, scrub: 1, invalidateOnRefresh: true,
             onUpdate: updateActiveCard,
-            onLeave: () => { if(dynamicBg) dynamicBg.style.opacity = '0'; },
-            onLeaveBack: () => { if(dynamicBg) dynamicBg.style.opacity = '0'; },
+            onLeave: () => { if(dynamicBg) dynamicBg.style.backgroundColor = 'transparent'; },
+            onLeaveBack: () => { if(dynamicBg) dynamicBg.style.backgroundColor = 'transparent'; },
             onEnter: updateActiveCard,
             onEnterBack: updateActiveCard
           }
@@ -1307,22 +1442,24 @@
         animate(info.target, { opacity: [0, 1], x: [100, 0], rotateY: [25, 0] }, { duration: 1.2, easing: [0.16, 1, 0.3, 1] });
       });
 
-      // ========== TILT 3D EN TARJETAS ==========
-      productCards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-          const rect = card.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-          const centerX = rect.width / 2;
-          const centerY = rect.height / 2;
-          const rotateX = ((y - centerY) / centerY) * -12;
-          const rotateY = ((x - centerX) / centerX) * 12;
-          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+      // ========== TILT 3D EN TARJETAS (solo desktop / fine pointer) ==========
+      if (!isCoarse) {
+        productCards.forEach(card => {
+          card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = ((y - centerY) / centerY) * -12;
+            const rotateY = ((x - centerX) / centerX) * 12;
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+          });
+          card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+          });
         });
-        card.addEventListener('mouseleave', () => {
-          card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
-        });
-      });
+      }
 
       // ========== CONTADORES ANIMADOS ==========
       const counters = document.querySelectorAll('.counter-number');
@@ -1412,9 +1549,15 @@
           requestAnimationFrame(updateHeader);
           ticking = true;
         }
-      });
+      }, { passive: true });
 
       updateHeader();
+
+      // Refresh ScrollTrigger after fonts/images settle (helps mobile layout & pin accuracy)
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => ScrollTrigger.refresh());
+      }
+      window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
     });
   </script>
 </body>
