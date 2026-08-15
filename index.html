@@ -2,18 +2,22 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#fef9f3" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="mobile-web-app-capable" content="yes" />
   <meta name="format-detection" content="telephone=no" />
   <title>Xio Rolls - Roles de Canela &amp; Fresas Frescas</title>
   <link href="https://fonts.googleapis.com" rel="preconnect" />
   <link crossorigin href="https://fonts.gstatic.com" rel="preconnect" />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Playfair+Display:ital,wght@0,600;0,900;1,600&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-  <script defer src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/motion@latest/dist/motion.js"></script>
-  <script defer src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/motion@latest/dist/motion.js"></script>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <script id="tailwind-config">
     tailwind.config = {
       darkMode: "class",
@@ -100,22 +104,113 @@
       padding: 0;
     }
 
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      height: -webkit-fill-available;
+    }
+
     body {
       font-family: var(--font-main);
       background-color: var(--bg-cream);
       color: var(--text-dark);
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overscroll-behavior-y: none;
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      min-height: 100dvh;
     }
 
-    #bg-canvas {
+    /* ===== FONDO ATMOSFÉRICO ULTRA LIGERO (CSS only – casi 0 GPU/CPU) ===== */
+    /* Solo transforms + opacity. Sin filter:blur, sin canvas, sin requestAnimationFrame */
+    #bg-atmosphere {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       z-index: -1;
       pointer-events: none;
-      opacity: 0.6;
+      overflow: hidden;
+      opacity: 0.7;
+    }
+
+    #bg-atmosphere .blob {
+      position: absolute;
+      border-radius: 50%;
+      will-change: transform;
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+    }
+
+    #bg-atmosphere .blob-1 {
+      width: 60vmax;
+      height: 60vmax;
+      top: -18%;
+      left: -22%;
+      background: radial-gradient(circle at 40% 40%,
+        rgba(255, 195, 170, 0.42) 0%,
+        rgba(255, 210, 190, 0.18) 42%,
+        transparent 72%);
+      animation: atmosphereDrift1 28s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+    }
+
+    #bg-atmosphere .blob-2 {
+      width: 52vmax;
+      height: 52vmax;
+      bottom: -22%;
+      right: -16%;
+      background: radial-gradient(circle at 55% 55%,
+        rgba(255, 225, 205, 0.36) 0%,
+        rgba(250, 235, 215, 0.14) 48%,
+        transparent 74%);
+      animation: atmosphereDrift2 34s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+    }
+
+    #bg-atmosphere .blob-3 {
+      width: 42vmax;
+      height: 42vmax;
+      top: 28%;
+      left: 38%;
+      background: radial-gradient(circle at 50% 50%,
+        rgba(255, 240, 220, 0.26) 0%,
+        transparent 70%);
+      animation: atmosphereDrift3 24s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+    }
+
+    /* Movimiento orgánico y fluido (más pasos = más natural) */
+    @keyframes atmosphereDrift1 {
+      0%   { transform: translate3d(0%, 0%, 0) scale(1) rotate(0deg); }
+      33%  { transform: translate3d(4%, 3%, 0) scale(1.06) rotate(1.5deg); }
+      66%  { transform: translate3d(2%, 6%, 0) scale(1.03) rotate(-1deg); }
+      100% { transform: translate3d(6%, 2%, 0) scale(1.08) rotate(0.5deg); }
+    }
+    @keyframes atmosphereDrift2 {
+      0%   { transform: translate3d(0%, 0%, 0) scale(1) rotate(0deg); }
+      33%  { transform: translate3d(-5%, -2%, 0) scale(1.05) rotate(-1.5deg); }
+      66%  { transform: translate3d(-2%, -6%, 0) scale(1.09) rotate(1deg); }
+      100% { transform: translate3d(-4%, -4%, 0) scale(1.04) rotate(-0.5deg); }
+    }
+    @keyframes atmosphereDrift3 {
+      0%   { transform: translate3d(0%, 0%, 0) scale(1) rotate(0deg); }
+      50%  { transform: translate3d(-3%, 5%, 0) scale(1.07) rotate(1deg); }
+      100% { transform: translate3d(3%, -3%, 0) scale(0.97) rotate(-1deg); }
+    }
+
+    /* En móviles de gama baja reducimos un poco el tamaño para aún menos overdraw */
+    @media (max-width: 768px) {
+      #bg-atmosphere {
+        opacity: 0.55;
+      }
+      #bg-atmosphere .blob-1 { width: 70vmax; height: 70vmax; }
+      #bg-atmosphere .blob-2 { width: 58vmax; height: 58vmax; }
+      #bg-atmosphere .blob-3 { width: 45vmax; height: 45vmax; }
+    }
+
+    /* Prefer reduced motion → completamente estático */
+    @media (prefers-reduced-motion: reduce) {
+      #bg-atmosphere .blob {
+        animation: none !important;
+      }
     }
 
     /* HEADER TRANSPARENTE (SOLO LOGO, DESAPARECE AL SCROLL) */
@@ -144,8 +239,10 @@
 
     .hero {
       position: relative;
-      width: 100vw;
+      width: 100%;
       height: 100vh;
+      height: 100dvh;
+      min-height: -webkit-fill-available;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -164,6 +261,8 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      object-position: center;
+      -webkit-playsinline: true;
     }
 
     .hero-content {
@@ -174,33 +273,42 @@
     }
 
     .hero-title-sub {
-      font-size: 1.2rem;
+      font-size: clamp(0.85rem, 2.8vw, 1.2rem);
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 4px;
+      letter-spacing: 0.2em;
       color: var(--accent-red);
       margin-bottom: 10px;
+      max-width: 100%;
+      padding: 0 8px;
     }
 
     .hero-title-main {
-      font-size: clamp(3rem, 9vw, 8rem);
+      font-size: clamp(2.1rem, 9vw, 8rem);
       font-weight: 900;
-      line-height: 0.9;
+      line-height: 0.95;
       text-transform: uppercase;
       color: var(--text-dark);
       text-shadow: 0 10px 30px rgba(255, 255, 255, 0.8);
+      max-width: 100%;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      hyphens: auto;
+      padding: 0 4px;
     }
 
     .hero-banner-box {
       display: inline-block;
       background: var(--text-dark);
       color: #fff;
-      padding: 10px 30px;
-      font-size: clamp(1.2rem, 3vw, 2.5rem);
+      padding: 10px 24px;
+      font-size: clamp(0.95rem, 3vw, 2.5rem);
       font-weight: 900;
       text-transform: uppercase;
       margin-top: 15px;
       transform: rotate(-2deg);
+      max-width: calc(100% - 16px);
+      overflow-wrap: break-word;
     }
 
     #hero-sub, #hero-main, #hero-banner {
@@ -211,6 +319,7 @@
       background-color: var(--bg-red-brand);
       color: #ffffff;
       min-height: 85vh;
+      min-height: 85dvh;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -222,13 +331,17 @@
     .statement-container {
       max-width: 1200px;
       margin: 0 auto;
+      width: 100%;
     }
     .statement-text {
-      font-size: clamp(2.2rem, 5.8vw, 5.5rem);
+      font-size: clamp(1.7rem, 5.8vw, 5.5rem);
       font-weight: 900;
-      line-height: 1.1;
+      line-height: 1.15;
       text-transform: uppercase;
       letter-spacing: -1.5px;
+      max-width: 100%;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
     .badge-box {
       display: inline-block;
@@ -261,40 +374,45 @@
       background-color: var(--bg-cream);
       transition: background-color 0.8s var(--ease-out-expo);
       overflow: hidden;
-      width: 100vw;
+      width: 100%;
       height: 100vh;
+      height: 100dvh;
+      min-height: -webkit-fill-available;
     }
     .products-dynamic-bg {
-      --dynamic-bg-color: transparent;
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 90vw;
-      height: 90vh;
+      width: 65vw;
+      height: 65vh;
       transform: translate3d(-50%, -50%, 0);
       border-radius: 50%;
-      opacity: 0.95;
+      /* Blur reducido: 200px era demasiado caro. 100px sigue viéndose suave */
+      filter: blur(100px);
+      opacity: 0.9;
       z-index: 0;
+      background-color: transparent;
+      transition: background-color 0.7s cubic-bezier(0.22, 1, 0.36, 1);
       pointer-events: none;
-      background:
-        radial-gradient(ellipse at center,
-          var(--dynamic-bg-color) 0%,
-          var(--dynamic-bg-color) 18%,
-          transparent 72%);
-      transition: background 0.7s var(--ease-out-expo);
-      contain: paint;
-      will-change: background;
+      will-change: background-color, transform;
+      contain: strict;
+      backface-visibility: hidden;
     }
 
-    @media (pointer: coarse) {
+    @media (max-width: 768px) {
       .products-dynamic-bg {
-        width: 100vw;
-        height: 100vw;
-        opacity: 0.82;
-        background:
-          radial-gradient(circle at center,
-            var(--dynamic-bg-color) 0%,
-            transparent 68%);
+        width: 85vw;
+        height: 55vh;
+        /* En móvil usamos blur mucho más ligero para eliminar tirones */
+        filter: blur(55px);
+        opacity: 0.75;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .products-dynamic-bg {
+        filter: blur(40px);
+        opacity: 0.65;
       }
     }
     .spylt-scroll-container {
@@ -333,23 +451,41 @@
       z-index: 1;
       transform-style: preserve-3d;
       transition: transform 0.1s ease-out;
+      touch-action: pan-y;
+      will-change: transform;
     }
     .product-card .spylt-image-only {
       transform-style: preserve-3d;
       backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
     }
     .spylt-image-only {
       width: 720px;
       height: auto;
       display: block;
-      filter: drop-shadow(0 30px 40px rgba(0,0,0,0.15));
+      filter: drop-shadow(0 25px 30px rgba(0,0,0,0.12));
       transition: transform 0.6s var(--ease-out-expo), filter 0.6s var(--ease-out-expo);
       cursor: pointer;
+      will-change: transform;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
     }
     .product-card:hover .spylt-image-only,
     .product-card.active-center .spylt-image-only {
       transform: translateY(-25px) rotate(2deg) scale(1.05);
-      filter: drop-shadow(0 50px 60px rgba(0,0,0,0.22));
+      filter: drop-shadow(0 40px 50px rgba(0,0,0,0.18));
+    }
+
+    /* En móvil reducimos drop-shadow para eliminar tirones durante el scroll horizontal */
+    @media (max-width: 768px) {
+      .spylt-image-only {
+        filter: drop-shadow(0 12px 18px rgba(0,0,0,0.1));
+      }
+      .product-card:hover .spylt-image-only,
+      .product-card.active-center .spylt-image-only {
+        transform: translateY(-12px) scale(1.03);
+        filter: drop-shadow(0 18px 24px rgba(0,0,0,0.14));
+      }
     }
 
     .sensory-guide {
@@ -498,9 +634,43 @@
 
     @media (max-width: 768px) {
       .spylt-header-block { width: 85vw; min-width: unset; }
-      .spylt-image-only { width: 300px; }
-      .spylt-cards-track { gap: 40px; }
-      .lifestyle-grid { grid-template-columns: 1fr; }
+      .spylt-image-only { width: 280px; }
+      .spylt-cards-track { gap: 32px; }
+      .lifestyle-grid { grid-template-columns: 1fr; gap: 16px; padding: 60px 4%; }
+      .statement-section { padding: 80px 5%; min-height: 70vh; min-height: 70dvh; }
+      .statement-text { letter-spacing: -0.8px; }
+      .badge-box { padding: 5px 14px; margin: 0 4px; font-size: 0.95em; }
+      #historia { padding: 100px 6%; }
+      .history-title { font-size: clamp(2.8rem, 10vw, 5rem); margin-bottom: 28px; }
+      .history-text { font-size: 1.1rem; line-height: 1.7; }
+      .sensory-guide { padding: 90px 6%; }
+      .sensory-guide h2 { font-size: clamp(2.4rem, 9vw, 4.5rem) !important; }
+      .editorial-number { font-size: 5rem; top: -20px; left: -10px; }
+      .hero-content { padding: 0 16px; }
+      footer { padding: 70px 5% 50px; }
+      .btn-whatsapp { padding: 16px 32px; font-size: 1rem; }
+      .spylt-header-title { font-size: clamp(2.6rem, 9vw, 4.5rem); letter-spacing: -1px; }
+      .floating-ornament { font-size: 22vw; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title-main { font-size: clamp(1.85rem, 8.5vw, 3.2rem); line-height: 1; }
+      .hero-title-sub { letter-spacing: 0.15em; font-size: clamp(0.75rem, 2.5vw, 0.95rem); }
+      .hero-banner-box { padding: 8px 16px; font-size: clamp(0.85rem, 3.2vw, 1.3rem); }
+      .spylt-image-only { width: 240px; }
+      .spylt-cards-track { gap: 24px; }
+      .spylt-header-block { width: 90vw; margin-right: 4vw; }
+      .statement-text { font-size: clamp(1.45rem, 6.5vw, 2.4rem); line-height: 1.2; }
+      .history-title { font-size: clamp(2.4rem, 11vw, 3.8rem); }
+      .btn-whatsapp { width: 100%; max-width: 320px; text-align: center; box-sizing: border-box; }
+      #site-header { top: 14px; left: 14px; }
+      #site-header .logo { font-size: 1.4rem; }
+    }
+
+    @media (max-width: 360px) {
+      .hero-title-main { font-size: clamp(1.6rem, 8vw, 2.6rem); }
+      .spylt-image-only { width: 210px; }
+      .statement-text { font-size: clamp(1.3rem, 6vw, 2rem); }
     }
 
     .motion-reveal span,
@@ -765,278 +935,6 @@
     .lenis.lenis-scrolling iframe {
       pointer-events: none;
     }
-
-
-    /* ===== MOBILE / PERFORMANCE LAYER ===== */
-    html {
-      -webkit-text-size-adjust: 100%;
-      text-size-adjust: 100%;
-      scroll-behavior: auto;
-    }
-
-    html, body {
-      width: 100%;
-      min-width: 0;
-      max-width: 100%;
-      overflow-x: hidden;
-    }
-
-    body {
-      min-height: 100%;
-      -webkit-tap-highlight-color: transparent;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    img, video, canvas {
-      max-width: 100%;
-    }
-
-    img {
-      height: auto;
-    }
-
-    #bg-canvas {
-      width: 100%;
-      height: 100%;
-      contain: strict;
-      transform: translateZ(0);
-    }
-
-    .hero {
-      width: 100%;
-      height: 100svh;
-      min-height: 100svh;
-    }
-
-    @supports (height: 100dvh) {
-      .hero {
-        height: 100dvh;
-        min-height: 100dvh;
-      }
-    }
-
-    .hero-video-container,
-    .hero-video-container video {
-      width: 100%;
-      height: 100%;
-      transform: translateZ(0);
-      backface-visibility: hidden;
-    }
-
-    .hero-content {
-      width: min(100%, 1200px);
-      max-width: 100%;
-      overflow: visible;
-    }
-
-    .hero-title-sub,
-    .hero-title-main,
-    .hero-banner-box,
-    .statement-text,
-    .faq-question,
-    .history-text,
-    footer p {
-      overflow-wrap: anywhere;
-      word-break: normal;
-    }
-
-    .hero-title-main .typewriter-text {
-      white-space: normal;
-    }
-
-    .spylt-scroll-container {
-      transform: translateZ(0);
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-    }
-
-    .spylt-image-only {
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-    }
-
-    .faq-question > span:first-child {
-      min-width: 0;
-      padding-right: 10px;
-      text-align: left;
-    }
-
-    .faq-question .icon {
-      flex: 0 0 auto;
-    }
-
-    .btn-whatsapp {
-      max-width: 100%;
-      overflow-wrap: anywhere;
-    }
-
-    @media (max-width: 768px) {
-      .hero-content {
-        width: 100%;
-        padding-left: max(12px, env(safe-area-inset-left));
-        padding-right: max(12px, env(safe-area-inset-right));
-      }
-
-      .hero-title-sub {
-        font-size: clamp(0.75rem, 3.6vw, 1.05rem);
-        line-height: 1.2;
-        letter-spacing: clamp(1px, 0.9vw, 3px);
-        max-width: 100%;
-      }
-
-      .hero-title-main {
-        font-size: clamp(2.35rem, 12vw, 5rem);
-        line-height: 0.92;
-        max-width: 100%;
-      }
-
-      .hero-banner-box {
-        max-width: 100%;
-        padding: 8px 14px;
-        font-size: clamp(0.82rem, 4.8vw, 1.55rem);
-        line-height: 1.05;
-      }
-
-      .statement-section {
-        min-height: auto;
-        padding: 84px max(18px, 6vw);
-      }
-
-      .statement-text {
-        font-size: clamp(1.55rem, 8.5vw, 3.25rem);
-        line-height: 1.08;
-        letter-spacing: -0.75px;
-      }
-
-      .badge-box {
-        padding: 5px 12px;
-        margin: 4px 3px;
-      }
-
-      .spylt-products-wrapper {
-        height: 100svh;
-      }
-
-      @supports (height: 100dvh) {
-        .spylt-products-wrapper {
-          height: 100dvh;
-        }
-      }
-
-      .spylt-header-title {
-        font-size: clamp(2.7rem, 12vw, 5.5rem);
-        max-width: 92vw;
-      }
-
-      .spylt-image-only {
-        width: min(300px, 76vw);
-      }
-
-      .spylt-cards-track {
-        gap: clamp(28px, 7vw, 40px);
-      }
-
-      .sensory-guide {
-        padding: 96px max(20px, 8vw);
-      }
-
-      .sensory-guide .text-6xl {
-        font-size: clamp(2.6rem, 12vw, 4.6rem);
-      }
-
-      #historia {
-        padding: 104px max(18px, 6vw);
-      }
-
-      .history-title {
-        font-size: clamp(3.1rem, 15vw, 6rem);
-        line-height: 0.88;
-      }
-
-      .history-text {
-        font-size: clamp(1rem, 4.5vw, 1.2rem);
-        line-height: 1.7;
-      }
-
-      .floating-ornament {
-        font-size: 25vw;
-      }
-
-      .lifestyle-grid {
-        padding: 76px max(18px, 5vw);
-        gap: 16px;
-      }
-
-      .lifestyle-item[style*="height:600px"] {
-        height: min(600px, 78svh) !important;
-      }
-
-      .faq-question {
-        font-size: clamp(1rem, 4.6vw, 1.2rem);
-        line-height: 1.25;
-      }
-
-      .preloader-logo {
-        font-size: clamp(2.8rem, 13vw, 4rem);
-      }
-
-      .preloader-sub {
-        max-width: 90vw;
-        text-align: center;
-        letter-spacing: clamp(0.15em, 1.8vw, 0.4em);
-      }
-
-      footer {
-        padding-left: max(20px, 5vw);
-        padding-right: max(20px, 5vw);
-        padding-bottom: calc(60px + env(safe-area-inset-bottom));
-      }
-
-      footer h2 {
-        font-size: clamp(2rem, 10vw, 4rem);
-        line-height: 0.95;
-      }
-
-      .btn-whatsapp {
-        width: min(100%, 360px);
-        padding-left: 24px;
-        padding-right: 24px;
-        line-height: 1.15;
-      }
-    }
-
-    @media (max-width: 390px) {
-      .hero-title-main {
-        font-size: clamp(2.15rem, 11.5vw, 4.3rem);
-      }
-
-      .hero-banner-box {
-        font-size: clamp(0.78rem, 4.5vw, 1.25rem);
-        padding-left: 11px;
-        padding-right: 11px;
-      }
-
-      .statement-text {
-        font-size: clamp(1.42rem, 8vw, 2.9rem);
-      }
-
-      .spylt-header-block {
-        width: 88vw;
-      }
-
-      .spylt-image-only {
-        width: min(280px, 74vw);
-      }
-    }
-
-    @media (pointer: coarse) {
-      .product-card,
-      .spylt-image-only,
-      .lifestyle-item img {
-        -webkit-tap-highlight-color: transparent;
-      }
-    }
-
   </style>
 </head>
 <body>
@@ -1051,7 +949,12 @@
   <div class="custom-cursor" id="custom-cursor"></div>
   <div class="custom-cursor-dot" id="custom-cursor-dot"></div>
 
-  <canvas id="bg-canvas"></canvas>
+  <!-- Fondo atmosférico ultra ligero (CSS only) -->
+  <div id="bg-atmosphere" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
 
   <header id="site-header">
     <div class="logo">XIO <span>Rolls</span></div>
@@ -1059,7 +962,7 @@
 
   <section class="hero">
     <div class="hero-video-container">
-      <video id="hero-video" muted playsinline preload="metadata" src="Cinnamon_rolls_emerge_float_drift_202607202209.mp4"></video>
+      <video id="hero-video" muted playsinline webkit-playsinline preload="metadata" src="Cinnamon_rolls_emerge_float_drift_202607202209.mp4"></video>
     </div>
     <div class="hero-content" id="hero-text">
       <div class="hero-title-sub" id="hero-sub">Horneados al momento • Creados con devoción</div>
@@ -1093,34 +996,34 @@
         </div>
         <div class="spylt-cards-track">
           <div class="product-card" data-bg="#51AFF7">
-            <img alt="Rol de Fresas con Crema" class="spylt-image-only" src="./img/rol (1).png" loading="eager" fetchpriority="high" decoding="async">
+            <img alt="Rol de Fresas con Crema" class="spylt-image-only" src="./img/rol (1).png" decoding="async" />
           </div>
           <div class="product-card" data-bg="#EE7C62">
-            <img alt="Rol Doble Crema" class="spylt-image-only" src="./img/rol (2).png" loading="lazy" decoding="async">
+            <img alt="Rol Doble Crema" class="spylt-image-only" src="./img/rol (2).png" decoding="async" />
           </div>
           <div class="product-card" data-bg="#642B15">
-            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (3).png" loading="lazy" decoding="async">
+            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (3).png" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#BD9EF4">
-            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (4).png" loading="lazy" decoding="async">
+            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (4).png" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#CF805B">
-            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (5).png" loading="lazy" decoding="async">
+            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (5).png" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#EED7B0">
-            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (6).png" loading="lazy" decoding="async">
+            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (6).png" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#B97242">
-            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (7).png" loading="lazy" decoding="async">
+            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (7).png" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#F1D4AD">
-            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (8).png" loading="lazy" decoding="async">
+            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (8).png" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#C7835A">
-            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (9).png" loading="lazy" decoding="async">
+            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (9).png" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#25766D">
-            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (10).png" loading="lazy" decoding="async">
+            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (10).png" loading="lazy" decoding="async" />
           </div>
         </div>
       </div>
@@ -1154,7 +1057,7 @@
     <div class="floating-ornament top-20 -left-10" id="bg-text-1">Tradición</div>
     <div class="history-wrapper">
       <div class="history-image img-reveal-wrapper" id="history-parallax-1">
-        <img alt="Masa artesanal" class="history-img" src="/img/Nust_Herrencia.jpeg" loading="lazy" decoding="async">
+        <img alt="Masa artesanal" class="history-img" src="/img/Nust_Herrencia.jpeg" loading="lazy" decoding="async" />
       </div>
       <div class="history-content">
         <span class="vintage-label">Est. 2026 • El Origen</span>
@@ -1192,7 +1095,7 @@
       <div class="relative motion-reveal">
         <div class="absolute -inset-4 border border-primary/10 rounded-lg -rotate-3"></div>
         <div class="img-reveal-wrapper alt rounded-lg overflow-hidden relative z-10">
-        <img alt="Boutique setup" class="rounded-lg shadow-2xl relative z-10 w-full aspect-[4/5] object-cover img-reveal-target" src="/img/Compromiso_Local.jpeg" loading="lazy" decoding="async">
+        <img alt="Boutique setup" class="rounded-lg shadow-2xl relative z-10 w-full aspect-[4/5] object-cover img-reveal-target" src="/img/Compromiso_Local.jpeg" loading="lazy" decoding="async" />
         </div>
       </div>
     </div>
@@ -1206,22 +1109,22 @@
     <div class="lifestyle-grid">
       <div class="lifestyle-item col-span-12 md:col-span-4 row-span-2 motion-reveal" style="height:600px;">
         <div class="img-reveal-wrapper h-full w-full">
-        <img alt="Lifestyle 1" src="/img/momentos_xio2.png" loading="lazy" decoding="async">
+        <img alt="Lifestyle 1" src="/img/momentos_xio2.png" loading="lazy" decoding="async" />
         </div>
       </div>
       <div class="lifestyle-item col-span-12 md:col-span-8 h-[300px] motion-reveal">
         <div class="img-reveal-wrapper h-full w-full alt">
-        <img alt="Lifestyle 2" src="/img/momentos_xio.jpeg" loading="lazy" decoding="async">
+        <img alt="Lifestyle 2" src="/img/momentos_xio.jpeg" loading="lazy" decoding="async" />
         </div>
       </div>
       <div class="lifestyle-item col-span-12 md:col-span-4 h-[280px] mt-4 motion-reveal">
         <div class="img-reveal-wrapper h-full w-full">
-        <img alt="Lifestyle 3" src="/img/momentos_xio3.jpeg" loading="lazy" decoding="async">
+        <img alt="Lifestyle 3" src="/img/momentos_xio3.jpeg" loading="lazy" decoding="async" />
         </div>
       </div>
       <div class="lifestyle-item col-span-12 md:col-span-4 h-[280px] -mt-10 md:mt-4 z-20 shadow-xl motion-reveal">
         <div class="img-reveal-wrapper h-full w-full alt">
-        <img alt="Lifestyle 4" src="/img/image.png" loading="lazy" decoding="async">
+        <img alt="Lifestyle 4" src="/img/image.png" loading="lazy" decoding="async" />
         </div>
       </div>
     </div>
@@ -1237,7 +1140,7 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
         <div class="group motion-reveal">
           <div class="overflow-hidden rounded-lg mb-8 aspect-square bg-white shadow-xl">
-            <img alt="Trío Esencial" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="./img/trio_roles.jpg" loading="lazy" decoding="async">
+            <img alt="Trío Esencial" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="./img/trio_roles.jpg" loading="lazy" decoding="async" />
           </div>
           <h3 class="text-2xl font-black text-charcoal-text mb-2 uppercase">Trío Esencial</h3>
           <p class="text-on-surface-variant font-light leading-relaxed mb-4">Una selección curada de nuestros tres sabores insignia, perfectos para una cata personal.</p>
@@ -1245,7 +1148,7 @@
         </div>
         <div class="group motion-reveal">
           <div class="overflow-hidden rounded-lg mb-8 aspect-square bg-white shadow-xl">
-            <img alt="Cuarteto Clásico" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="./img/cuarteto.jpg" loading="lazy" decoding="async">
+            <img alt="Cuarteto Clásico" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="./img/cuarteto.jpg" loading="lazy" decoding="async" />
           </div>
           <h3 class="text-2xl font-black text-charcoal-text mb-2 uppercase">Cuarteto Clásico</h3>
           <p class="text-on-surface-variant font-light leading-relaxed mb-4">Cuatro piezas de masa madre y canela Ceylán, el equilibrio ideal entre suavidad y frescura.</p>
@@ -1253,7 +1156,7 @@
         </div>
         <div class="group motion-reveal">
           <div class="overflow-hidden rounded-lg mb-8 aspect-square bg-white shadow-xl">
-            <img alt="Degustación Elite" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="./img/seis_roles.jpg" loading="lazy" decoding="async">
+            <img alt="Degustación Elite" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="./img/seis_roles.jpg" loading="lazy" decoding="async" />
           </div>
           <h3 class="text-2xl font-black text-charcoal-text mb-2 uppercase">Degustación Especial</h3>
           <p class="text-on-surface-variant font-light leading-relaxed mb-4">La experiencia definitiva: seis mini roles con glaseados premium y fresas de temporada.</p>
@@ -1315,251 +1218,115 @@
     <h2 class="motion-reveal">¿LISTO PARA TU ANTOJO?</h2>
     <p class="motion-reveal" style="font-size:1.2rem; opacity:0.8;">Pedidos especiales y entregas a domicilio todos los días.</p>
     <div class="motion-reveal">
-      <a class="btn-whatsapp" href="https://wa.me/" target="_blank" rel="noopener noreferrer">Ordenar por WhatsApp</a>
+      <a class="btn-whatsapp" href="https://wa.me/" target="_blank">Ordenar por WhatsApp</a>
     </div>
     <p style="margin-top:60px; font-size:0.8rem; opacity:0.4;">© 2026 Xio Rolls. Made with love.</p>
   </footer>
 
-  <script id="fragmentShader" type="x-shader/x-fragment">
-    precision highp float;
-    varying vec2 v_texCoord;
-    uniform float u_time;
-    uniform vec2 u_resolution;
 
-    void main() {
-      vec2 uv = v_texCoord;
-      float noise = sin(uv.x * 3.0 + u_time * 0.5) * cos(uv.y * 3.0 + u_time * 0.4);
-      noise += sin(uv.x * 5.0 - u_time * 0.7) * cos(uv.y * 2.0 + u_time * 0.3) * 0.5;
-      vec3 color1 = vec3(0.98, 0.96, 0.94);
-      vec3 color2 = vec3(0.96, 0.92, 0.88);
-      vec3 finalColor = mix(color1, color2, clamp(noise * 0.3 + 0.5, 0.0, 1.0));
-      gl_FragColor = vec4(finalColor, 1.0);
-    }
-  </script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // ===== DEVICE / PERFORMANCE PROFILE =====
-      const mediaCoarse = window.matchMedia('(pointer: coarse)');
-      const isTouchDevice = mediaCoarse.matches;
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const hardwareThreads = navigator.hardwareConcurrency || 4;
-      const deviceMemory = navigator.deviceMemory || 4;
-      const isLowEnd = isTouchDevice && (hardwareThreads <= 4 || deviceMemory <= 4);
+      // ========== MOBILE / PERFORMANCE DETECTION ==========
+      const isCoarse = window.matchMedia('(pointer: coarse)').matches;
+      const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const isMobile = isCoarse || isMobileUA || window.innerWidth < 768;
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // ===== LENIS SMOOTH SCROLL =====
-      // Native touch scrolling is kept on phones/tablets to avoid an extra animation loop.
-      const lenis = (typeof Lenis !== 'undefined' && !isTouchDevice)
-        ? new Lenis({ lerp: 0.08, smoothWheel: true, syncTouch: false })
-        : null;
+      // ========== LENIS SMOOTH SCROLL (activo también en móvil) ==========
+      // Mantenemos el scroll suave premium en todos los dispositivos
+      const lenis = new Lenis({
+        lerp: isMobile ? 0.1 : 0.08,
+        smoothWheel: true,
+        syncTouch: true,               // importante para móvil
+        syncTouchLerp: isMobile ? 0.08 : 0.075,
+        touchMultiplier: isMobile ? 1.35 : 1,
+        wheelMultiplier: 1,
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        normalizeWheel: true,
+        infinite: false
+      });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((time) => {
+        lenis.raf(time * 1000);
+      });
+      gsap.ticker.lagSmoothing(0);
 
-      if (lenis && typeof ScrollTrigger !== 'undefined') {
-        lenis.on('scroll', ScrollTrigger.update);
-        gsap.ticker.add((time) => lenis.raf(time * 1000));
-        gsap.ticker.lagSmoothing(500, 33);
-      }
-
-      // ===== PRELOADER =====
+      // ========== PRELOADER ==========
       const preloader = document.getElementById('preloader');
       const heroMainEl = document.getElementById('hero-main');
       const heroSubEl = document.getElementById('hero-sub');
       const heroBannerEl = document.getElementById('hero-banner');
-      const video = document.getElementById('hero-video');
-
-      function startHeroVideo() {
-        if (!video) return;
-        try {
-          video.load();
-          const playPromise = video.play();
-          if (playPromise && typeof playPromise.catch === 'function') {
-            playPromise.catch(() => {});
-          }
-        } catch (_) {}
-      }
+      const video = document.getElementById("hero-video");
 
       function hidePreloader() {
-        if (preloader) preloader.classList.add('hidden');
-        if (lenis) lenis.start();
-        startHeroVideo();
+        preloader.classList.add('hidden');
+        lenis.start();
+        // Start hero video only after preloader is gone
+        if (video) video.play().catch(() => {});
         initTypewriter();
       }
+      lenis.stop();
 
-      if (lenis) lenis.stop();
+      setTimeout(() => {
+        hidePreloader();
+      }, isMobile ? 2200 : 2800);
 
-      const preloaderTimer = window.setTimeout(hidePreloader, 2800);
-
-      // ===== CURSOR PERSONALIZADO (SOLO POINTER PRECISO) =====
+      // ========== CURSOR PERSONALIZADO (solo fine pointer) ==========
       const cursor = document.getElementById('custom-cursor');
       const cursorDot = document.getElementById('custom-cursor-dot');
-      const finePointer = window.matchMedia('(pointer: fine)').matches;
+      if (!isCoarse && cursor && cursorDot) {
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
 
-      if (finePointer && cursor && cursorDot) {
-        let mouseX = 0;
-        let mouseY = 0;
-        let cursorX = 0;
-        let cursorY = 0;
-        let cursorActive = false;
-        let cursorRaf = 0;
-
-        const animateCursor = () => {
-          cursorRaf = 0;
-          cursorX += (mouseX - cursorX) * 0.15;
-          cursorY += (mouseY - cursorY) * 0.15;
-          cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
-          cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
-
-          if (cursorActive && (Math.abs(mouseX - cursorX) > 0.2 || Math.abs(mouseY - cursorY) > 0.2)) {
-            cursorRaf = requestAnimationFrame(animateCursor);
-          }
-        };
-
-        document.addEventListener('pointermove', (e) => {
+        document.addEventListener('mousemove', (e) => {
           mouseX = e.clientX;
           mouseY = e.clientY;
-          cursorActive = true;
-          cursor.classList.add('visible');
-          cursorDot.classList.add('visible');
-          if (!cursorRaf) cursorRaf = requestAnimationFrame(animateCursor);
+          cursorDot.style.left = mouseX + 'px';
+          cursorDot.style.top = mouseY + 'px';
+          if (!cursor.classList.contains('visible')) {
+            cursor.classList.add('visible');
+            cursorDot.classList.add('visible');
+          }
         }, { passive: true });
 
-        document.addEventListener('pointerleave', () => {
-          cursor.classList.remove('visible', 'hovering');
-          cursorDot.classList.remove('visible');
-          cursorActive = false;
-        }, { passive: true });
+        function animateCursor() {
+          cursorX += (mouseX - cursorX) * 0.15;
+          cursorY += (mouseY - cursorY) * 0.15;
+          cursor.style.left = cursorX + 'px';
+          cursor.style.top = cursorY + 'px';
+          requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
 
-        const hoverTargets = document.querySelectorAll('a, button, .product-card, .faq-question, .lifestyle-item, .btn-whatsapp, .badge-box');
-        hoverTargets.forEach((el) => {
-          el.addEventListener('pointerenter', () => cursor.classList.add('hovering'), { passive: true });
-          el.addEventListener('pointerleave', () => cursor.classList.remove('hovering'), { passive: true });
+        const hoverTargets = 'a, button, .product-card, .faq-question, .lifestyle-item, .btn-whatsapp, .badge-box';
+        document.querySelectorAll(hoverTargets).forEach(el => {
+          el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+          el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
         });
       }
 
-      // ===== WEBGL BACKGROUND =====
-      // One resize per viewport change instead of reallocating the GPU canvas every frame.
-      const canvas = document.getElementById('bg-canvas');
-      const gl = canvas && canvas.getContext
-        ? canvas.getContext('webgl', {
-            alpha: true,
-            antialias: false,
-            depth: false,
-            stencil: false,
-            powerPreference: isLowEnd ? 'low-power' : 'default'
-          })
-        : null;
-
-      if (gl) {
-        const program = gl.createProgram();
-        const vsSource = `attribute vec4 a_position; varying vec2 v_texCoord; void main() { gl_Position = a_position; v_texCoord = a_position.xy * 0.5 + 0.5; }`;
-        const fsSource = document.getElementById('fragmentShader').textContent;
-
-        function createShader(context, type, source) {
-          const shader = context.createShader(type);
-          context.shaderSource(shader, source);
-          context.compileShader(shader);
-          if (!context.getShaderParameter(shader, context.COMPILE_STATUS)) {
-            context.deleteShader(shader);
-            return null;
-          }
-          return shader;
-        }
-
-        const vs = createShader(gl, gl.VERTEX_SHADER, vsSource);
-        const fs = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
-
-        if (vs && fs) {
-          gl.attachShader(program, vs);
-          gl.attachShader(program, fs);
-          gl.linkProgram(program);
-
-          if (gl.getProgramParameter(program, gl.LINK_STATUS)) {
-            gl.useProgram(program);
-
-            const positionBuffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-              -1, -1,  1, -1, -1,  1,
-              -1,  1,  1, -1,  1,  1
-            ]), gl.STATIC_DRAW);
-
-            const positionLoc = gl.getAttribLocation(program, 'a_position');
-            gl.enableVertexAttribArray(positionLoc);
-            gl.vertexAttribPointer(positionLoc, 2, gl.FLOAT, false, 0, 0);
-
-            const timeLoc = gl.getUniformLocation(program, 'u_time');
-            const resolutionLoc = gl.getUniformLocation(program, 'u_resolution');
-            let lastWidth = 0;
-            let lastHeight = 0;
-            let renderRaf = 0;
-            let lastRenderTime = 0;
-            const frameInterval = isLowEnd ? 1000 / 45 : 1000 / 60;
-
-            const resizeCanvas = () => {
-              const dpr = Math.min(window.devicePixelRatio || 1, isLowEnd ? 1 : 1.25);
-              const width = Math.max(1, Math.round(window.innerWidth * dpr));
-              const height = Math.max(1, Math.round(window.innerHeight * dpr));
-
-              if (width === lastWidth && height === lastHeight) return;
-              lastWidth = width;
-              lastHeight = height;
-              canvas.width = width;
-              canvas.height = height;
-              gl.viewport(0, 0, width, height);
-              if (resolutionLoc) gl.uniform2f(resolutionLoc, width, height);
-            };
-
-            const render = (time) => {
-              renderRaf = 0;
-              if (document.visibilityState === 'hidden') return;
-              if (time - lastRenderTime < frameInterval) {
-                renderRaf = requestAnimationFrame(render);
-                return;
-              }
-              lastRenderTime = time;
-              resizeCanvas();
-              gl.uniform1f(timeLoc, time * 0.001);
-              gl.drawArrays(gl.TRIANGLES, 0, 6);
-              renderRaf = requestAnimationFrame(render);
-            };
-
-            resizeCanvas();
-            renderRaf = requestAnimationFrame(render);
-
-            window.addEventListener('resize', resizeCanvas, { passive: true });
-            window.addEventListener('orientationchange', () => {
-              window.setTimeout(resizeCanvas, 100);
-            }, { passive: true });
-          }
-        }
-      }
-
-      // ===== TYPEWRITER HERO =====
+      // ========== TYPEWRITER HERO ==========
       const typewriterTarget = document.getElementById('typewriter-target');
       const typewriterCursor = document.getElementById('typewriter-cursor');
-      const mainText = 'IRRESISTIBLEMENTE SUAVES';
+      const mainText = "IRRESISTIBLEMENTE SUAVES";
       let typeIndex = 0;
 
       function initTypewriter() {
-        if (!heroMainEl || !typewriterTarget) return;
-        heroMainEl.style.opacity = '1';
+        heroMainEl.style.opacity = "1";
         typeIndex = 0;
-        typewriterTarget.textContent = '';
-        if (reducedMotion) {
-          typewriterTarget.textContent = mainText;
-          if (typewriterCursor) typewriterCursor.style.display = 'none';
-          revealRestOfHero();
-          return;
-        }
+        typewriterTarget.textContent = "";
         typeNextChar();
       }
 
       function typeNextChar() {
-        if (!typewriterTarget) return;
         if (typeIndex < mainText.length) {
-          typewriterTarget.textContent += mainText.charAt(typeIndex++);
-          window.setTimeout(typeNextChar, 80 + Math.random() * 60);
+          typewriterTarget.textContent += mainText.charAt(typeIndex);
+          typeIndex++;
+          setTimeout(typeNextChar, 80 + Math.random() * 60);
         } else {
-          window.setTimeout(() => {
-            if (typewriterCursor) typewriterCursor.style.display = 'none';
+          setTimeout(() => {
+            typewriterCursor.style.display = 'none';
             revealRestOfHero();
           }, 600);
         }
@@ -1567,325 +1334,238 @@
 
       function splitTextIntoWords(element) {
         const childNodes = Array.from(element.childNodes);
-        element.innerHTML = '';
+        element.innerHTML = "";
         const allSpans = [];
-
         childNodes.forEach(node => {
           if (node.nodeType === Node.TEXT_NODE) {
-            node.textContent.split(/(\s+)/).forEach(part => {
-              if (!part.trim()) {
-                element.appendChild(document.createTextNode(part));
-              } else {
-                const span = document.createElement('span');
-                span.textContent = part;
-                span.style.opacity = '0';
-                span.style.transform = 'translate3d(0,30px,0)';
-                element.appendChild(span);
-                allSpans.push(span);
+            const parts = node.textContent.split(/(\s+)/);
+            parts.forEach(part => {
+              if (part.trim() === "") { element.appendChild(document.createTextNode(part)); } 
+              else {
+                const span = document.createElement("span");
+                span.textContent = part; span.style.opacity = "0"; span.style.transform = "translateY(30px)";
+                element.appendChild(span); allSpans.push(span);
               }
             });
           } else if (node.nodeType === Node.ELEMENT_NODE) {
-            node.style.opacity = '0';
-            node.style.transform = 'translate3d(0,30px,0)';
-            element.appendChild(node);
-            allSpans.push(node);
+            node.style.opacity = "0"; node.style.transform = "translateY(30px)";
+            element.appendChild(node); allSpans.push(node);
           }
         });
-
         return allSpans;
       }
 
-      const motionApi = window.Motion || {};
-      const animate = motionApi.animate;
-      const inView = motionApi.inView;
-      const stagger = motionApi.stagger;
+      const { animate, inView, stagger } = Motion;
 
       let restRevealed = false;
       function revealRestOfHero() {
-        if (restRevealed || !heroSubEl || !heroBannerEl) return;
+        if (restRevealed) return;
         restRevealed = true;
-        heroSubEl.style.opacity = '1';
-        heroBannerEl.style.opacity = '1';
-
-        if (reducedMotion || typeof animate !== 'function' || typeof stagger !== 'function') {
-          heroSubEl.style.opacity = '1';
-          heroBannerEl.style.opacity = '1';
-          heroSubEl.style.transform = 'none';
-          heroBannerEl.style.transform = 'none';
-          return;
-        }
-
+        heroSubEl.style.opacity = "1";
+        heroBannerEl.style.opacity = "1";
         const heroSubWords = splitTextIntoWords(heroSubEl);
         const heroBannerWords = splitTextIntoWords(heroBannerEl);
-        animate(heroSubWords, { opacity: [0, 1], y: [30, 0] }, {
-          duration: 0.8,
-          delay: stagger(0.05),
-          easing: [0.22, 1, 0.36, 1]
-        });
-        animate(heroBannerWords, { opacity: [0, 1], y: [30, 0] }, {
-          duration: 0.8,
-          delay: stagger(0.05, { start: 0.15 }),
-          easing: [0.22, 1, 0.36, 1]
-        });
+        animate(heroSubWords, { opacity: [0, 1], y: [30, 0] }, { duration: 0.8, delay: stagger(0.05), easing: [0.22, 1, 0.36, 1] });
+        animate(heroBannerWords, { opacity: [0, 1], y: [30, 0] }, { duration: 0.8, delay: stagger(0.05, { start: 0.15 }), easing: [0.22, 1, 0.36, 1] });
       }
 
       if (video) {
-        video.addEventListener('timeupdate', () => {
-          if (video.duration && video.currentTime > video.duration * 0.4 && !restRevealed) {
-            revealRestOfHero();
-          }
+        video.addEventListener("timeupdate", () => { 
+          if (video.currentTime > video.duration * 0.4 && !restRevealed) revealRestOfHero(); 
         }, { passive: true });
       }
-
-      // ===== SCROLL / HEADER / HERO REVEAL IN A SINGLE RAF =====
-      const header = document.getElementById('site-header');
-      let scrollRaf = 0;
-      let latestScrollY = window.scrollY;
-
-      const updateScrollUI = () => {
-        scrollRaf = 0;
-        if (latestScrollY > 40 && !restRevealed) revealRestOfHero();
-        if (header) header.style.opacity = latestScrollY > 50 ? '0' : '1';
-      };
-
-      window.addEventListener('scroll', () => {
-        latestScrollY = window.scrollY;
-        if (!scrollRaf) scrollRaf = requestAnimationFrame(updateScrollUI);
+      window.addEventListener("scroll", () => { 
+        if (window.scrollY > 40 && !restRevealed) revealRestOfHero(); 
       }, { passive: true });
 
-      updateScrollUI();
-
-      // ===== MOTION REVEALS =====
-      document.querySelectorAll('.motion-reveal').forEach((el) => {
-        if (typeof inView !== 'function' || typeof animate !== 'function' || typeof stagger !== 'function') {
-          el.style.opacity = '1';
-          return;
-        }
-
+      document.querySelectorAll(".motion-reveal").forEach((el) => {
         const words = splitTextIntoWords(el);
-
-        if (reducedMotion) {
-          words.forEach(word => {
-            word.style.opacity = '1';
-            word.style.transform = 'none';
-          });
-          return;
-        }
-
         inView(el, () => {
-          animate(words, { opacity: [0, 1], y: [30, 0] }, {
-            duration: 1,
-            delay: stagger(0.1),
-            easing: [0.22, 1, 0.36, 1]
-          });
-        }, { amount: 0.75 });
+          animate(words, { opacity: [0, 1], y: [30, 0] },
+            { 
+                duration: 1,
+                delay: stagger(0.1),
+                easing: [0.22, 1, 0.36, 1] 
+            });
+        }, {amount: 0.75,});
+        
       });
 
-      // ===== ACTIVE PRODUCT CARD + DYNAMIC BACKGROUND =====
-      const productCards = Array.from(document.querySelectorAll('.product-card'));
+      // --- ACTIVE CARD ON CENTER + DYNAMIC BACKGROUND (optimizado) ---
+      const productCards = document.querySelectorAll('.product-card');
       const dynamicBg = document.querySelector('.products-dynamic-bg');
-      const scrollTrack = document.getElementById('scroll-track');
-      let cardCenters = [];
-      let activeCard = null;
-      let activeCardRaf = 0;
+      let currentActiveCard = null;
 
-      const recalcCardCenters = () => {
-        cardCenters = productCards.map(card => card.offsetLeft + card.offsetWidth / 2);
-      };
-
-      const updateActiveCard = () => {
-        activeCardRaf = 0;
-        if (!productCards.length || !scrollTrack) return;
+      // Solo actualizamos cuando realmente cambia la tarjeta central → elimina tirones
+      function updateActiveCard() {
         const viewportCenter = window.innerWidth / 2;
-        const currentX = Number(gsap.getProperty(scrollTrack, 'x')) || 0;
-        let closestIndex = 0;
+        let closestCard = null;
         let minDistance = Infinity;
 
-        for (let i = 0; i < cardCenters.length; i++) {
-          const distance = Math.abs(viewportCenter - (cardCenters[i] + currentX));
+        // getBoundingClientRect solo se llama cuando es necesario, y solo una vez por tarjeta
+        for (let i = 0; i < productCards.length; i++) {
+          const card = productCards[i];
+          const rect = card.getBoundingClientRect();
+          // Si la tarjeta está muy fuera de pantalla, saltamos (optimización)
+          if (rect.right < -100 || rect.left > window.innerWidth + 100) continue;
+
+          const cardCenter = rect.left + rect.width * 0.5;
+          const distance = Math.abs(viewportCenter - cardCenter);
+
           if (distance < minDistance) {
             minDistance = distance;
-            closestIndex = i;
+            closestCard = card;
           }
         }
 
-        const nextCard = productCards[closestIndex];
-        if (nextCard !== activeCard) {
-          if (activeCard) activeCard.classList.remove('active-center');
-          nextCard.classList.add('active-center');
-          activeCard = nextCard;
-
-          const bgColor = nextCard.getAttribute('data-bg');
-          if (bgColor && dynamicBg) {
-            dynamicBg.style.setProperty('--dynamic-bg-color', bgColor);
+        // Solo tocamos el DOM si cambió la tarjeta activa
+        if (closestCard && closestCard !== currentActiveCard) {
+          if (currentActiveCard) {
+            currentActiveCard.classList.remove('active-center');
           }
-        }
-      };
+          closestCard.classList.add('active-center');
+          currentActiveCard = closestCard;
 
-      const scheduleActiveCardUpdate = () => {
-        if (!activeCardRaf) activeCardRaf = requestAnimationFrame(updateActiveCard);
-      };
-
-      recalcCardCenters();
-
-      if (typeof ScrollTrigger !== 'undefined') {
-        gsap.registerPlugin(ScrollTrigger);
-
-        if (scrollTrack) {
-          gsap.to(scrollTrack, {
-            x: () => -(scrollTrack.scrollWidth - window.innerWidth + 150),
-            ease: 'none',
-            scrollTrigger: {
-              trigger: '.spylt-products-wrapper',
-              start: 'top top',
-              end: () => `+=${scrollTrack.scrollWidth}`,
-              pin: true,
-              scrub: 1,
-              invalidateOnRefresh: true,
-              onUpdate: scheduleActiveCardUpdate,
-              onRefresh: () => {
-                recalcCardCenters();
-                scheduleActiveCardUpdate();
-              },
-              onLeave: () => {
-                if (dynamicBg) dynamicBg.style.setProperty('--dynamic-bg-color', 'transparent');
-              },
-              onLeaveBack: () => {
-                if (dynamicBg) dynamicBg.style.setProperty('--dynamic-bg-color', 'transparent');
-              },
-              onEnter: scheduleActiveCardUpdate,
-              onEnterBack: scheduleActiveCardUpdate
+          if (dynamicBg) {
+            const bgColor = closestCard.getAttribute('data-bg');
+            if (bgColor) {
+              dynamicBg.style.backgroundColor = bgColor;
             }
-          });
+          }
         }
+      }
 
-        gsap.to('#history-parallax-1 img', {
-          y: '20%',
-          ease: 'none',
+      gsap.registerPlugin(ScrollTrigger);
+      
+      const scrollTrack = document.getElementById("scroll-track");
+      if (scrollTrack) {
+        gsap.to(scrollTrack, {
+          x: () => -(scrollTrack.scrollWidth - window.innerWidth + 150),
+          ease: "none",
           scrollTrigger: {
-            trigger: '#historia',
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: true
-          }
-        });
-
-        gsap.from('#bg-text-1', {
-          x: -200,
-          opacity: 0,
-          duration: 2,
-          scrollTrigger: {
-            trigger: '#historia',
-            start: 'top 80%',
-            scrub: 1
-          }
-        });
-
-        productCards.forEach(card => {
-          if (typeof inView === 'function' && typeof animate === 'function' && !reducedMotion) {
-            inView(card, (info) => {
-              animate(info.target, {
-                opacity: [0, 1],
-                x: [100, 0],
-                rotateY: [25, 0]
-              }, {
-                duration: 1.2,
-                easing: [0.16, 1, 0.3, 1]
-              });
-            });
-          }
-        });
-
-        // ===== CONTADORES ANIMADOS =====
-        document.querySelectorAll('.counter-number').forEach(counter => {
-          const target = parseInt(counter.getAttribute('data-count'), 10) || 0;
-          const suffix = counter.getAttribute('data-suffix') || '';
-
-          if (reducedMotion) {
-            counter.textContent = target + suffix;
-            return;
-          }
-
-          gsap.fromTo(counter,
-            { innerText: 0 },
-            {
-              innerText: target,
-              duration: 2.5,
-              ease: 'power2.out',
-              snap: { innerText: 1 },
-              scrollTrigger: {
-                trigger: counter,
-                start: 'top 85%',
-                once: true
-              },
-              onUpdate: function() {
-                counter.textContent = Math.round(this.targets()[0].innerText) + suffix;
+            trigger: ".spylt-products-wrapper",
+            start: "top top",
+            end: () => `+=${scrollTrack.scrollWidth}`,
+            pin: true,
+            scrub: isMobile ? 0.8 : 1,          // scrub un poco más reactivo en móvil
+            invalidateOnRefresh: true,
+            anticipatePin: 1,                   // ayuda a reducir saltos en iOS
+            onUpdate: updateActiveCard,
+            onLeave: () => {
+              if (dynamicBg) dynamicBg.style.backgroundColor = 'transparent';
+              if (currentActiveCard) {
+                currentActiveCard.classList.remove('active-center');
+                currentActiveCard = null;
               }
-            }
-          );
-        });
-
-        // ===== IMAGE REVEAL =====
-        document.querySelectorAll('.img-reveal-wrapper').forEach(wrapper => {
-          ScrollTrigger.create({
-            trigger: wrapper,
-            start: 'top 80%',
-            once: true,
-            onEnter: () => wrapper.classList.add('revealed')
-          });
+            },
+            onLeaveBack: () => {
+              if (dynamicBg) dynamicBg.style.backgroundColor = 'transparent';
+              if (currentActiveCard) {
+                currentActiveCard.classList.remove('active-center');
+                currentActiveCard = null;
+              }
+            },
+            onEnter: updateActiveCard,
+            onEnterBack: updateActiveCard
+          }
         });
       }
 
-      // ===== TILT 3D ONLY WITH FINE POINTER =====
-      if (finePointer && !reducedMotion) {
-        productCards.forEach(card => {
-          let tiltRaf = 0;
-          let pendingEvent = null;
+      gsap.to("#history-parallax-1 img", {
+        y: "20%",
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#historia",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true
+        }
+      });
 
-          const applyTilt = () => {
-            tiltRaf = 0;
-            if (!pendingEvent) return;
-            const e = pendingEvent;
-            pendingEvent = null;
+      gsap.from("#bg-text-1", {
+        x: -200,
+        opacity: 0,
+        duration: 2,
+        scrollTrigger: {
+          trigger: "#historia",
+          start: "top 80%",
+          scrub: 1
+        }
+      });
+
+      inView(".product-card", (info) => {
+        animate(info.target, { opacity: [0, 1], x: [100, 0], rotateY: [25, 0] }, { duration: 1.2, easing: [0.16, 1, 0.3, 1] });
+      });
+
+      // ========== TILT 3D EN TARJETAS (solo desktop / fine pointer) ==========
+      if (!isCoarse) {
+        productCards.forEach(card => {
+          card.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
-            const rotateX = ((e.clientY - rect.top - centerY) / centerY) * -12;
-            const rotateY = ((e.clientX - rect.left - centerX) / centerX) * 12;
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(0) translateY(-10px)`;
-          };
-
-          card.addEventListener('pointermove', e => {
-            pendingEvent = e;
-            if (!tiltRaf) tiltRaf = requestAnimationFrame(applyTilt);
-          }, { passive: true });
-
-          card.addEventListener('pointerleave', () => {
-            pendingEvent = null;
-            if (tiltRaf) cancelAnimationFrame(tiltRaf);
-            tiltRaf = 0;
-            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0) translateY(0)';
-          }, { passive: true });
+            const rotateX = ((y - centerY) / centerY) * -12;
+            const rotateY = ((x - centerX) / centerX) * 12;
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+          });
+          card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+          });
         });
       }
 
-      // ===== FAQ =====
-      document.querySelectorAll('.faq-item').forEach(item => {
+      // ========== CONTADORES ANIMADOS ==========
+      const counters = document.querySelectorAll('.counter-number');
+      counters.forEach(counter => {
+        const target = parseInt(counter.getAttribute('data-count'));
+        const suffix = counter.getAttribute('data-suffix') || '';
+        gsap.fromTo(counter, 
+          { innerText: 0 },
+          {
+            innerText: target,
+            duration: 2.5,
+            ease: "power2.out",
+            snap: { innerText: 1 },
+            scrollTrigger: {
+              trigger: counter,
+              start: "top 85%",
+              once: true
+            },
+            onUpdate: function() {
+              counter.textContent = Math.round(this.targets()[0].innerText) + suffix;
+            }
+          }
+        );
+      });
+
+      // ========== IMAGE REVEAL SCROLL ==========
+      document.querySelectorAll('.img-reveal-wrapper').forEach(wrapper => {
+        ScrollTrigger.create({
+          trigger: wrapper,
+          start: "top 80%",
+          once: true,
+          onEnter: () => wrapper.classList.add('revealed')
+        });
+      });
+
+      const faqItems = document.querySelectorAll('.faq-item');
+      
+      faqItems.forEach(item => {
         const question = item.querySelector('.faq-question');
         const answer = item.querySelector('.faq-answer');
-        const icon = question && question.querySelector('.icon');
-        if (!question || !answer || !icon) return;
+        const icon = question.querySelector('.icon');
 
-        question.addEventListener('click', function() {
+        question.addEventListener('click', function(e) {
           const isOpen = answer.classList.contains('open');
 
-          document.querySelectorAll('.faq-answer.open').forEach(a => {
-            if (a !== answer) {
+          document.querySelectorAll('.faq-answer').forEach(a => {
+            if (a !== answer && a.classList.contains('open')) {
               a.classList.remove('open');
               a.style.height = '0px';
-              const previous = a.previousElementSibling;
-              previous?.querySelector('.icon')?.classList.remove('open');
-              previous?.setAttribute('aria-expanded', 'false');
+              a.previousElementSibling.querySelector('.icon').classList.remove('open');
+              a.previousElementSibling.setAttribute('aria-expanded', 'false');
             }
           });
 
@@ -1895,7 +1575,8 @@
             icon.classList.remove('open');
             this.setAttribute('aria-expanded', 'false');
           } else {
-            answer.style.height = answer.scrollHeight + 'px';
+            const height = answer.scrollHeight + 'px';
+            answer.style.height = height;
             answer.classList.add('open');
             icon.classList.add('open');
             this.setAttribute('aria-expanded', 'true');
@@ -1903,30 +1584,35 @@
         });
       });
 
-      // ===== RESIZE / ORIENTATION =====
-      let refreshTimer = 0;
-      const handleResize = () => {
-        recalcCardCenters();
-        window.clearTimeout(refreshTimer);
-        refreshTimer = window.setTimeout(() => {
-          if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
-          scheduleActiveCardUpdate();
-        }, 180);
+      const header = document.getElementById('site-header');
+      let lastScrollY = window.scrollY;
+      let ticking = false;
+
+      const updateHeader = () => {
+        const currentScrollY = window.scrollY;
+        if (currentScrollY > 50) {
+          header.style.opacity = '0';
+        } else {
+          header.style.opacity = '1';
+        }
+        lastScrollY = currentScrollY;
+        ticking = false;
       };
 
-      window.addEventListener('resize', handleResize, { passive: true });
-      window.addEventListener('orientationchange', handleResize, { passive: true });
-
-      // ===== VISIBILITY / BATTERY FRIENDLY RENDERING =====
-      document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
-          if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
-          scheduleActiveCardUpdate();
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          requestAnimationFrame(updateHeader);
+          ticking = true;
         }
       }, { passive: true });
 
-      // Keep the exact current visual behavior while ensuring startup survives slow devices.
-      window.addEventListener('beforeunload', () => window.clearTimeout(preloaderTimer), { passive: true });
+      updateHeader();
+
+      // Refresh ScrollTrigger after fonts/images settle (helps mobile layout & pin accuracy)
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => ScrollTrigger.refresh());
+      }
+      window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
     });
   </script>
 </body>
