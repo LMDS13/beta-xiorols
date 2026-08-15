@@ -379,40 +379,53 @@
       height: 100dvh;
       min-height: -webkit-fill-available;
     }
+    /* ===== Fondo dinámico de productos – SIN filter:blur (cero tirones) ===== */
     .products-dynamic-bg {
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 65vw;
-      height: 65vh;
+      width: 70vw;
+      height: 70vh;
       transform: translate3d(-50%, -50%, 0);
       border-radius: 50%;
-      /* Blur reducido: 200px era demasiado caro. 100px sigue viéndose suave */
-      filter: blur(100px);
-      opacity: 0.9;
       z-index: 0;
-      background-color: transparent;
-      transition: background-color 0.7s cubic-bezier(0.22, 1, 0.36, 1);
       pointer-events: none;
-      will-change: background-color, transform;
+      /* Usamos radial-gradient puro en vez de blur. Mucho más barato y se ve suave */
+      background: radial-gradient(circle at center,
+        var(--blob-color, transparent) 0%,
+        color-mix(in srgb, var(--blob-color, transparent) 35%, transparent) 35%,
+        transparent 72%);
+      opacity: 0.85;
+      transition: --blob-color 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+                  opacity 0.5s ease;
+      will-change: opacity;
       contain: strict;
       backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    /* Fallback para navegadores que no soportan color-mix bien */
+    @supports not (background: color-mix(in srgb, red, blue)) {
+      .products-dynamic-bg {
+        background: radial-gradient(circle at center,
+          var(--blob-color, transparent) 0%,
+          transparent 70%);
+      }
     }
 
     @media (max-width: 768px) {
       .products-dynamic-bg {
-        width: 85vw;
-        height: 55vh;
-        /* En móvil usamos blur mucho más ligero para eliminar tirones */
-        filter: blur(55px);
-        opacity: 0.75;
+        width: 90vw;
+        height: 60vh;
+        opacity: 0.7;
       }
     }
 
     @media (max-width: 480px) {
       .products-dynamic-bg {
-        filter: blur(40px);
-        opacity: 0.65;
+        width: 95vw;
+        height: 55vh;
+        opacity: 0.6;
       }
     }
     .spylt-scroll-container {
@@ -1232,19 +1245,22 @@
       const isMobile = isCoarse || isMobileUA || window.innerWidth < 768;
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // ========== LENIS SMOOTH SCROLL (activo también en móvil) ==========
+      // ========== LENIS SMOOTH SCROLL (activo + optimizado para móvil gama baja) ==========
       // Mantenemos el scroll suave premium en todos los dispositivos
+      // En móvil usamos lerp más alto → menos trabajo por frame = menos tirones en gama baja
       const lenis = new Lenis({
-        lerp: isMobile ? 0.1 : 0.08,
+        lerp: isMobile ? 0.14 : 0.08,           // más alto = más estable en Android/iOS débiles
         smoothWheel: true,
-        syncTouch: true,               // importante para móvil
-        syncTouchLerp: isMobile ? 0.08 : 0.075,
-        touchMultiplier: isMobile ? 1.35 : 1,
+        syncTouch: true,                       // imprescindible para que el scroll se sienta nativo+suave
+        syncTouchLerp: isMobile ? 0.1 : 0.075,
+        touchMultiplier: isMobile ? 1.4 : 1,
         wheelMultiplier: 1,
         orientation: 'vertical',
         gestureOrientation: 'vertical',
         normalizeWheel: true,
-        infinite: false
+        infinite: false,
+        // Ayuda a dispositivos de gama baja
+        autoResize: true
       });
       lenis.on('scroll', ScrollTrigger.update);
       gsap.ticker.add((time) => {
@@ -1429,7 +1445,8 @@
           if (dynamicBg) {
             const bgColor = closestCard.getAttribute('data-bg');
             if (bgColor) {
-              dynamicBg.style.backgroundColor = bgColor;
+              // Usamos CSS variable → el radial-gradient cambia de color sin blur ni repaints caros
+              dynamicBg.style.setProperty('--blob-color', bgColor);
             }
           }
         }
@@ -1447,19 +1464,21 @@
             start: "top top",
             end: () => `+=${scrollTrack.scrollWidth}`,
             pin: true,
-            scrub: isMobile ? 0.8 : 1,          // scrub un poco más reactivo en móvil
+            pinType: isMobile ? "transform" : "fixed",  // transform es más estable en móvil
+            scrub: isMobile ? 0.7 : 1,
             invalidateOnRefresh: true,
-            anticipatePin: 1,                   // ayuda a reducir saltos en iOS
+            anticipatePin: 1,
+            fastScrollEnd: true,                // evita que se quede "pegado" en scrolls rápidos
             onUpdate: updateActiveCard,
             onLeave: () => {
-              if (dynamicBg) dynamicBg.style.backgroundColor = 'transparent';
+              if (dynamicBg) dynamicBg.style.setProperty('--blob-color', 'transparent');
               if (currentActiveCard) {
                 currentActiveCard.classList.remove('active-center');
                 currentActiveCard = null;
               }
             },
             onLeaveBack: () => {
-              if (dynamicBg) dynamicBg.style.backgroundColor = 'transparent';
+              if (dynamicBg) dynamicBg.style.setProperty('--blob-color', 'transparent');
               if (currentActiveCard) {
                 currentActiveCard.classList.remove('active-center');
                 currentActiveCard = null;
