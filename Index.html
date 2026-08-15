@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Xio Rolls - Roles de Canela &amp; Fresas Frescas</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin href="https://fonts.gstatic.com" rel="preconnect" />
+  <link href="https://unpkg.com" rel="preconnect" />
+  <link href="https://cdnjs.cloudflare.com" rel="preconnect" />
+  <link href="https://cdn.jsdelivr.net" rel="preconnect" />
+  <link href="https://cdn.tailwindcss.com" rel="preconnect" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Playfair+Display:ital,wght@0,600;0,900;1,600&display=swap" rel="stylesheet" />
+  <script defer src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/motion@latest/dist/motion.js"></script>
+  <script defer src="https://cdn.tailwindcss.com"></script>
+  <script defer id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "background": "#fef9f3",
+            "surface-container-low": "#f8f3ed",
+            "on-tertiary-container": "#ff8988",
+            "surface-container-high": "#ece7e2",
+            "on-primary-container": "#ff8a82",
+            "on-primary": "#ffffff",
+            "surface-bright": "#fef9f3",
+            "outline-variant": "#dfbfbc",
+            "on-tertiary-fixed-variant": "#92001c",
+            "primary-container": "#801217",
+            "surface-container-lowest": "#ffffff",
+            "charcoal-text": "#2b1e1a",
+            "deep-espresso": "#1e1310",
+            "on-background": "#1d1b18",
+            "tertiary": "#5b000e",
+            "surface-dim": "#ded9d4",
+            "surface-tint": "#ab3332",
+            "surface-variant": "#e6e2dc",
+            "inverse-primary": "#ffb3ad",
+            "on-primary-fixed": "#410004",
+            "error": "#ba1a1a",
+            "secondary-fixed": "#ffdbcd",
+            "on-primary-fixed-variant": "#8a1a1d",
+            "secondary-fixed-dim": "#ffb595",
+            "outline": "#8c716e",
+            "primary-fixed": "#ffdad7",
+            "surface-container": "#f2ede7",
+            "on-secondary-container": "#692600",
+            "primary": "#5c0008",
+            "tertiary-fixed": "#ffdad8",
+            "on-error": "#ffffff",
+            "inverse-on-surface": "#f5f0ea",
+            "surface": "#fef9f3",
+            "on-tertiary": "#ffffff",
+            "on-surface": "#1d1b18",
+            "on-secondary": "#ffffff",
+            "surface-container-highest": "#e6e2dc",
+            "on-secondary-fixed": "#350f00",
+            "on-error-container": "#93000a",
+            "primary-fixed-dim": "#ffb3ad",
+            "inverse-surface": "#32302c",
+            "error-container": "#ffdad6",
+            "tertiary-fixed-dim": "#ffb3b1",
+            "on-surface-variant": "#58413f",
+            "secondary": "#a23f02",
+            "secondary-container": "#fe8448",
+            "whatsapp-green": "#25d366",
+            "on-tertiary-fixed": "#410007",
+            "tertiary-container": "#850019",
+            "on-secondary-fixed-variant": "#7c2e00"
+          },
+          borderRadius: {
+            DEFAULT: "1rem",
+            lg: "2rem",
+            xl: "3rem",
+            full: "9999px"
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --bg-cream: #fef9f3;
+      --bg-dark: #1e1310;
+      --bg-red-brand: #801217;
+      --accent-red: #e63946;
+      --accent-orange: #e06d33;
+      --text-dark: #2b1e1a;
+      --font-main: 'Outfit', sans-serif;
+      --font-serif: 'Playfair Display', serif;
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background-color: var(--bg-cream);
+      color: var(--text-dark);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      overscroll-behavior-y: none;
+    }
+
+    /* Red de seguridad responsive: evita que cualquier texto se corte en pantallas angostas,
+       sin alterar el tamaño/aspecto en el resto de los dispositivos */
+    h1, h2, h3, h4, p, span {
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    img, video {
+      max-width: 100%;
+      height: auto;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    /* HEADER TRANSPARENTE (SOLO LOGO, DESAPARECE AL SCROLL) */
+    #site-header {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 100;
+      transition: opacity 0.5s ease;
+      opacity: 1;
+      pointer-events: none;
+    }
+    #site-header .logo {
+      font-size: 1.8rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: #fff;
+      text-shadow: 0 0 15px rgba(0,0,0,0.3);
+      pointer-events: auto;
+    }
+    #site-header .logo span {
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: var(--accent-red);
+    }
+
+    .hero {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .hero-video-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+    .hero-video-container video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    .hero-title-sub {
+      font-size: 1.2rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      color: var(--accent-red);
+      margin-bottom: 10px;
+    }
+
+    .hero-title-main {
+      font-size: clamp(3rem, 9vw, 8rem);
+      font-weight: 900;
+      line-height: 0.9;
+      text-transform: uppercase;
+      color: var(--text-dark);
+      text-shadow: 0 10px 30px rgba(255, 255, 255, 0.8);
+    }
+
+    .hero-banner-box {
+      display: inline-block;
+      background: var(--text-dark);
+      color: #fff;
+      padding: 10px 30px;
+      font-size: clamp(1.2rem, 3vw, 2.5rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      margin-top: 15px;
+      transform: rotate(-2deg);
+    }
+
+    #hero-sub, #hero-main, #hero-banner {
+      opacity: 0;
+    }
+
+    .statement-section {
+      background-color: var(--bg-red-brand);
+      color: #ffffff;
+      min-height: 85vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 120px 8%;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+    .statement-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .statement-text {
+      font-size: clamp(2.2rem, 5.8vw, 5.5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      text-transform: uppercase;
+      letter-spacing: -1.5px;
+    }
+    .badge-box {
+      display: inline-block;
+      background-color: var(--accent-orange);
+      color: #ffffff;
+      padding: 6px 22px;
+      border-radius: 12px 2px 12px 2px;
+      font-weight: 900;
+      transform: rotate(-3deg) translateY(-8px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+      margin: 0 8px;
+      vertical-align: middle;
+      transition: transform 0.4s var(--ease-out-expo);
+    }
+    .badge-box:hover {
+      transform: rotate(-1deg) translateY(-12px) scale(1.05);
+    }
+    .badge-box.alt {
+      background-color: #ffffff;
+      color: var(--bg-red-brand);
+      border-radius: 2px 12px 2px 12px;
+      transform: rotate(2deg) translateY(-6px);
+    }
+    .badge-box.alt:hover {
+      transform: rotate(4deg) translateY(-10px) scale(1.05);
+    }
+
+    .spylt-products-wrapper {
+      position: relative;
+      background-color: var(--bg-cream);
+      transition: background-color 0.8s var(--ease-out-expo);
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+    }
+    .products-dynamic-bg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 70vw;
+      height: 70vh;
+      transform: translate(-50%, -50%) translateZ(0);
+      -webkit-transform: translate(-50%, -50%) translateZ(0);
+      border-radius: 50%;
+      filter: blur(200px);
+      -webkit-filter: blur(200px);
+      opacity: 1;
+      z-index: 0;
+      background-color: transparent;
+      transition: background-color 0.9s var(--ease-out-expo);
+      pointer-events: none;
+      will-change: background-color;
+      contain: paint;
+    }
+    .spylt-scroll-container {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      width: max-content;
+      padding-left: 8vw;
+      padding-right: 8vw;
+      will-change: transform;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+    }
+    .spylt-header-block {
+      flex-shrink: 0;
+      width: 45vw;
+      min-width: 720px;
+      margin-right: 6vw;
+    }
+    .spylt-header-title {
+      font-size: clamp(3.5rem, 6vw, 6.5rem);
+      font-weight: 900;
+      line-height: 0.9;
+      text-transform: uppercase;
+      color: var(--text-dark);
+      letter-spacing: -2px;
+    }
+    .spylt-cards-track {
+      display: flex;
+      gap: 60px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .product-card {
+      position: relative;
+      flex-shrink: 0;
+      -webkit-perspective: 1000px;
+      perspective: 1000px;
+      z-index: 1;
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+      transition: transform 0.1s ease-out;
+      will-change: transform;
+    }
+    .product-card .spylt-image-only {
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+    .spylt-image-only {
+      width: 720px;
+      height: auto;
+      display: block;
+      filter: drop-shadow(0 30px 40px rgba(0,0,0,0.15));
+      transition: transform 0.6s var(--ease-out-expo), filter 0.6s var(--ease-out-expo);
+      cursor: pointer;
+    }
+    .product-card:hover .spylt-image-only,
+    .product-card.active-center .spylt-image-only {
+      transform: translateY(-25px) rotate(2deg) scale(1.05);
+      filter: drop-shadow(0 50px 60px rgba(0,0,0,0.22));
+    }
+
+    .sensory-guide {
+      background-color: var(--bg-red-brand);
+      color: #fff;
+      padding: 140px 8%;
+    }
+    .editorial-number {
+      font-family: var(--font-serif);
+      font-size: 8rem;
+      line-height: 0.8;
+      opacity: 0.15;
+      position: absolute;
+      top: -40px;
+      left: -20px;
+    }
+
+    #historia {
+      padding: 180px 10%;
+      background-color: #fffbf7;
+      overflow: hidden;
+      position: relative;
+    }
+    .history-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 60px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .history-image {
+      flex: 1 1 50%;
+      overflow: hidden;
+      border-radius: 16px;
+      clip-path: inset(0 0 0 0);
+    }
+    .history-image img {
+      width: 100%;
+      height: 120%;
+      object-fit: cover;
+      margin-top: -10%;
+      display: block;
+    }
+    .history-content {
+      flex: 1 1 45%;
+    }
+    .history-title {
+      font-family: var(--font-serif);
+      font-size: clamp(4rem, 8vw, 7rem);
+      font-weight: 900;
+      line-height: 0.85;
+      margin-bottom: 40px;
+      letter-spacing: -2px;
+      color: var(--primary);
+    }
+    .history-text {
+      font-size: 1.25rem;
+      line-height: 1.8;
+      color: var(--on-surface-variant);
+    }
+    .vintage-label {
+      font-family: var(--font-main);
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      font-weight: 800;
+      font-size: 0.75rem;
+      color: var(--secondary);
+      display: block;
+      margin-bottom: 20px;
+    }
+    .floating-ornament {
+      position: absolute;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 15vw;
+      color: var(--primary-fixed);
+      opacity: 0.2;
+      z-index: 0;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 1024px) {
+      .history-wrapper {
+        flex-direction: column;
+        gap: 40px;
+      }
+      .history-content {
+        flex: 1 1 auto;
+        width: 100%;
+      }
+    }
+
+    .lifestyle-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 20px;
+      padding: 100px 5%;
+    }
+    .lifestyle-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+    .lifestyle-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1s var(--ease-out-expo);
+    }
+    .lifestyle-item:hover img {
+      transform: scale(1.1);
+    }
+
+    footer {
+      background-color: var(--bg-dark);
+      color: #fff;
+      padding: 100px 5% 60px;
+      text-align: center;
+      position: relative;
+    }
+    footer h2 {
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 900;
+      margin-bottom: 20px;
+      letter-spacing: -1px;
+    }
+    .btn-whatsapp {
+      display: inline-block;
+      background-color: #25d366;
+      color: #fff;
+      font-weight: 800;
+      padding: 20px 44px;
+      border-radius: 60px;
+      text-decoration: none;
+      font-size: 1.15rem;
+      text-transform: uppercase;
+      margin-top: 30px;
+      box-shadow: 0 15px 30px rgba(37, 211, 102, 0.2);
+      transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s var(--ease-out-expo);
+    }
+    .btn-whatsapp:hover {
+      transform: scale(1.08) translateY(-4px);
+      box-shadow: 0 20px 40px rgba(37, 211, 102, 0.3);
+    }
+
+    @media (max-width: 768px) {
+      .spylt-header-block { width: 85vw; min-width: unset; }
+      .spylt-image-only { width: 300px; }
+      .spylt-cards-track { gap: 40px; }
+      .lifestyle-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Gama baja / pantallas muy angostas (320px-400px): baja el piso del clamp()
+       de los textos grandes para que nunca se corten ni desborden. El tamaño en
+       tablet/desktop y el diseño general no cambian. */
+    @media (max-width: 400px) {
+      .hero-title-main { font-size: clamp(2.1rem, 11.5vw, 8rem); }
+      .hero-title-sub { font-size: 1rem; letter-spacing: 2px; }
+      .hero-banner-box { font-size: clamp(1rem, 6vw, 2.5rem); padding: 8px 18px; }
+      .statement-text { font-size: clamp(1.7rem, 7.5vw, 5.5rem); }
+      .history-title { font-size: clamp(2.6rem, 11vw, 7rem); }
+      .spylt-header-title { font-size: clamp(2.4rem, 9vw, 6.5rem); }
+      .editorial-number { font-size: 5rem; }
+      footer h2 { font-size: clamp(1.6rem, 7.5vw, 4rem); }
+    }
+
+    .motion-reveal span,
+    .hero-title-sub span,
+    .hero-title-main span,
+    .hero-banner-box span {
+      display: inline-block;
+      will-change: transform, opacity;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--outline-variant);
+      padding-bottom: 16px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .faq-question {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      background: none;
+      border: none;
+      font-family: var(--font-main);
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--text-dark);
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 8px 0;
+      transition: color 0.3s ease;
+    }
+    .faq-question:hover {
+      color: var(--accent-red);
+    }
+    .faq-question .icon {
+      font-size: 1.8rem;
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      user-select: none;
+      display: inline-block;
+    }
+    .faq-question .icon.open {
+      transform: rotate(45deg);
+    }
+    .faq-answer {
+      height: 0;
+      overflow: hidden;
+      transition: height 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                  opacity 0.5s ease 0.1s,
+                  transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    .faq-answer.open {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .faq-answer p {
+      padding-top: 12px;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--on-surface-variant);
+      font-weight: 300;
+    }
+
+    /* ===== PRELOADER ELEGANTE ===== */
+    .preloader {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: var(--bg-cream);
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 1.2s cubic-bezier(0.33, 1, 0.68, 1), 
+                  transform 1.2s cubic-bezier(0.33, 1, 0.68, 1),
+                  visibility 1.2s cubic-bezier(0.33, 1, 0.68, 1);
+    }
+    .preloader.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: scale(1.04);
+    }
+    .preloader-logo {
+      font-size: 4rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: var(--text-dark);
+      position: relative;
+      overflow: hidden;
+    }
+    .preloader-logo span {
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: var(--accent-red);
+    }
+    .preloader-logo .fill-mask {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: var(--accent-red);
+      transform: scaleX(0);
+      transform-origin: left;
+      mix-blend-mode: color;
+      animation: preloaderFill 2s var(--ease-out-expo) forwards;
+    }
+    @keyframes preloaderFill {
+      0% { transform: scaleX(0); }
+      50% { transform: scaleX(1); transform-origin: left; }
+      51% { transform-origin: right; }
+      100% { transform: scaleX(0); transform-origin: right; }
+    }
+    .preloader-sub {
+      margin-top: 24px;
+      font-size: 0.75rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--on-surface-variant);
+      opacity: 0;
+      animation: preloaderFadeIn 0.6s ease 0.3s forwards;
+    }
+    .preloader-bar {
+      width: 120px;
+      height: 2px;
+      background: var(--surface-container-high);
+      border-radius: 2px;
+      margin-top: 32px;
+      overflow: hidden;
+      position: relative;
+    }
+    .preloader-bar::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      height: 100%;
+      width: 100%;
+      background: var(--accent-red);
+      transform: scaleX(0);
+      transform-origin: left;
+      animation: preloaderBar 2.2s var(--ease-out-expo) forwards;
+    }
+    @keyframes preloaderBar {
+      0% { transform: scaleX(0); }
+      100% { transform: scaleX(1); }
+    }
+    @keyframes preloaderFadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== CURSOR PERSONALIZADO ===== */
+    .custom-cursor {
+      width: 32px; height: 32px;
+      border: 1.5px solid rgba(43, 30, 26, 0.35);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transition: width 0.5s var(--ease-out-expo), height 0.5s var(--ease-out-expo),
+                  background 0.4s ease, border-color 0.4s ease, opacity 0.4s ease,
+                  transform 0.15s ease-out;
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0;
+    }
+    .custom-cursor.visible {
+      opacity: 1;
+    }
+    .custom-cursor.hovering {
+      width: 56px; height: 56px;
+      background: rgba(128, 18, 23, 0.06);
+      border-color: rgba(128, 18, 23, 0.45);
+    }
+    .custom-cursor-dot {
+      width: 5px; height: 5px;
+      background: rgba(43, 30, 26, 0.55);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.4s ease, transform 0.15s ease-out;
+      opacity: 0;
+    }
+    .custom-cursor-dot.visible {
+      opacity: 1;
+    }
+    @media (pointer: coarse) {
+      .custom-cursor, .custom-cursor-dot { display: none !important; }
+    }
+
+    /* ===== TYPEWRITER ===== */
+    .typewriter-text {
+      display: inline;
+    }
+    .typewriter-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 1em;
+      background: var(--accent-red);
+      margin-left: 4px;
+      vertical-align: text-bottom;
+      animation: blink 0.8s step-end infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* ===== IMAGE REVEAL ===== */
+    .img-reveal-wrapper {
+      position: relative;
+      overflow: hidden;
+    }
+    .img-reveal-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: var(--bg-red-brand);
+      z-index: 2;
+      transform: scaleX(1);
+      transform-origin: right;
+      transition: transform 1.2s var(--ease-out-expo);
+    }
+    .img-reveal-wrapper.revealed::before {
+      transform: scaleX(0);
+    }
+    .img-reveal-wrapper img {
+      transform: scale(1.2);
+      transition: transform 1.4s var(--ease-out-expo) 0.1s;
+    }
+    .img-reveal-wrapper.revealed img {
+      transform: scale(1);
+    }
+    .img-reveal-wrapper.alt::before {
+      transform-origin: left;
+    }
+
+    /* ===== COUNTER ===== */
+    .counter-number {
+      display: inline-block;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ===== SCROLLBAR STYLING (para Lenis) ===== */
+    html.lenis, html.lenis body {
+      height: auto;
+    }
+    .lenis.lenis-smooth {
+      scroll-behavior: auto !important;
+    }
+    .lenis.lenis-smooth [data-lenis-prevent] {
+      overscroll-behavior: contain;
+    }
+    .lenis.lenis-stopped {
+      overflow: hidden;
+    }
+    .lenis.lenis-scrolling iframe {
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- PRELOADER ELEGANTE -->
+  <div class="preloader" id="preloader">
+    <div class="preloader-logo">XIO <span>Rolls</span><div class="fill-mask"></div></div>
+    <div class="preloader-sub">Preparando tu experiencia...</div>
+    <div class="preloader-bar"></div>
+  </div>
+
+  <!-- CURSOR PERSONALIZADO -->
+  <div class="custom-cursor" id="custom-cursor"></div>
+  <div class="custom-cursor-dot" id="custom-cursor-dot"></div>
+
+  <canvas id="bg-canvas"></canvas>
+
+  <header id="site-header">
+    <div class="logo">XIO <span>Rolls</span></div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-video-container">
+      <video id="hero-video" muted playsinline webkit-playsinline="true" preload="auto" disablepictureinpicture disableremoteplayback src="Cinnamon_rolls_emerge_float_drift_202607202209.mp4"></video>
+    </div>
+    <div class="hero-content" id="hero-text">
+      <div class="hero-title-sub" id="hero-sub">Horneados al momento • Creados con devoción</div>
+      <h1 class="hero-title-main" id="hero-main"><span class="typewriter-text" id="typewriter-target"></span><span class="typewriter-cursor" id="typewriter-cursor"></span></h1>
+      <div class="hero-banner-box" id="hero-banner">ROLES DE CANELA GOURMET</div>
+    </div>
+  </section>
+
+  <section class="statement-section">
+    <div class="statement-container">
+      <p class="statement-text motion-reveal">
+        REDESCUBRE EL ARTE DE LA 
+        <span class="badge-box">MIGA PERFECTA</span>
+        TEJIDA EN ESPIRALES DE CANELA CEYLÁN Y UN 
+        <span class="badge-box alt">VELO CREMOSO</span>
+        QUE SE DERRITE LENTAMENTE EN TU PALADAR.
+      </p>
+    </div>
+  </section>
+
+  <div class="pin-spacer">
+    <section class="spylt-products-wrapper" id="menu">
+      <div class="products-dynamic-bg"></div>
+      <div class="spylt-scroll-container" id="scroll-track">
+        <div class="spylt-header-block">
+          <h2 class="spylt-header-title">
+            NUESTRAS OBRAS<br />
+            <span class="badge-box">INSIGNIA</span> <br />
+            DE LA CASA
+          </h2>
+        </div>
+        <div class="spylt-cards-track">
+          <div class="product-card" data-bg="#51AFF7">
+            <img alt="Rol de Fresas con Crema" class="spylt-image-only" src="/img/rol (1).png"  loading="lazy" decoding="async" />
+          </div>
+          <div class="product-card" data-bg="#EE7C62">
+            <img alt="Rol Doble Crema" class="spylt-image-only" src="/img/rol (2).png"  loading="lazy" decoding="async" />
+          </div>
+          <div class="product-card" data-bg="#642B15">
+            <img alt="Pack Familiar" class="spylt-image-only" src="/img/rol (3).png"  loading="lazy" decoding="async" />
+          </div>
+          <div class="product-card" data-bg="#BD9EF4">
+            <img alt="Pack Familiar" class="spylt-image-only" src="/img/rol (4).png"  loading="lazy" decoding="async" />
+          </div>
+          <div class="product-card" data-bg="#CF805B">
+            <img alt="Pack Familiar" class="spylt-image-only" src="/img/rol (5).png"  loading="lazy" decoding="async" />
+          </div>
+          <div class="product-card" data-bg="#EED7B0">
+            <img alt="Pack Familiar" class="spylt-image-only" src="/img/rol (6).png"  loading="lazy" decoding="async" />
+          </div>
+          <div class="product-card" data-bg="#B97242">
+            <img alt="Pack Familiar" class="spylt-image-only" src="/img/rol (7).png"  loading="lazy" decoding="async" />
+          </div>
+          <div class="product-card" data-bg="#F1D4AD">
+            <img alt="Pack Familiar" class="spylt-image-only" src="/img/rol (8).png"  loading="lazy" decoding="async" />
+          </div>
+          <div class="product-card" data-bg="#C7835A">
+            <img alt="Pack Familiar" class="spylt-image-only" src="/img/rol (9).png"  loading="lazy" decoding="async" />
+          </div>
+          <div class="product-card" data-bg="#25766D">
+            <img alt="Pack Familiar" class="spylt-image-only" src="/img/rol (10).png"  loading="lazy" decoding="async" />
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="sensory-guide">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-white text-6xl md:text-8xl font-black uppercase mb-20 tracking-tighter motion-reveal">EL MOMENTO DEL <br /> DELEITE</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-24 mt-20">
+        <div class="relative pt-12 motion-reveal">
+          <span class="editorial-number">01</span>
+          <h3 class="font-serif text-3xl italic mb-6 text-on-tertiary-container">EL BOHÍO AROMÁTICO</h3>
+          <p class="text-lg opacity-80 leading-relaxed font-light">Al abrir la caja, el ambiente se transforma. Notas cálidas de mantequilla de pastura, vainilla pura y canela recién molida crean una atmósfera de puro placer sensorial.</p>
+        </div>
+        <div class="relative pt-12 motion-reveal">
+          <span class="editorial-number">02</span>
+          <h3 class="font-serif text-3xl italic mb-6 text-on-tertiary-container">SUAVIDAD ABSOLUTA</h3>
+          <p class="text-lg opacity-80 leading-relaxed font-light">Al cortar el centro, sentirás la levedad etérea de nuestra masa fermentada lentamente. Una textura tan dócil que cede delicadamente al peso de tu tenedor.</p>
+        </div>
+        <div class="relative pt-12 motion-reveal">
+          <span class="editorial-number">03</span>
+          <h3 class="font-serif text-3xl italic mb-6 text-on-tertiary-container">EL ABRAZO TIBIO</h3>
+          <p class="text-lg opacity-80 leading-relaxed font-light">Disfrútalo en su punto óptimo de temperatura. El calor suave activa los aceites esenciales del relleno, convirtiendo cada bocado en un abrazo reconfortante.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="historia">
+    <div class="floating-ornament top-20 -left-10" id="bg-text-1">Tradición</div>
+    <div class="history-wrapper">
+      <div class="history-image img-reveal-wrapper" id="history-parallax-1">
+        <img alt="Masa artesanal" class="history-img" src="/img/Nust_Herrencia.jpeg"  loading="lazy" decoding="async" />
+      </div>
+      <div class="history-content">
+        <span class="vintage-label">Est. 2026 • El Origen</span>
+        <h2 class="history-title motion-reveal">Nuestra <br /> Herencia</h2>
+        <div class="history-text space-y-6 motion-reveal">
+          <p>Nacimos de una devoción casi obsesiva por el bocado perfecto: no nos conformamos con hacer pan, buscamos redefinir el arte de la repostería artesanal para crear roles que despierten emociones puras. Creemos firmemente que la repostería excepcional nace del respeto por los detalles invisibles.</p>
+          <p>Por eso, cada rol Xio es fruto del tiempo, la paciencia y un amasado artesanal: fermentaciones prolongadas para lograr una miga elástica y etérea, entrelazada con espirales de la canela. Combinamos esta tradición con glaseados cremosos elaborados desde cero. Solo pureza gastronómica hecha con devoción.</p>
+          <div class="pt-8 border-t border-outline/30 mt-10">
+            <p class="font-serif italic text-2xl text-primary leading-tight">"Transformamos ingredientes nobles en momentos de puro deleite para tu paladar."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-32 px-[8%] bg-surface-container-low overflow-hidden">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+      <div class="motion-reveal">
+        <h4 class="text-primary font-bold tracking-[0.2em] text-sm uppercase mb-6 italic">Desde el origen</h4>
+        <h2 class="text-5xl md:text-7xl font-black text-charcoal-text leading-[0.9] mb-10">EL COMPROMISO <br />CON LO LOCAL</h2>
+        <p class="text-xl text-on-surface-variant leading-relaxed max-w-lg">La auténtica grandeza repostera no nace en la fábrica, sino en el origen. Por ello, colaboramos de la mano con productores y agricultores locales que comparten nuestra misma pasión por la excelencia. </p>
+        <p class="text-xl text-on-surface-variant leading-relaxed max-w-lg">Seleccionamos mantequilla pura de pastura, harina de molienda artesanal y frutas de temporada cosechadas en su punto máximo de madurez. Cada insumo llega a nuestro taller con la promesa de la frescura: sin conservantes, sin atajos y respetando los ciclos de la tierra.</p>
+        <p class="text-xl text-on-surface-variant leading-relaxed max-w-lg">Garantizamos una experiencia de sabor puro, honesto e insuperable en cada lote.</p>
+        <div class="mt-12 grid grid-cols-2 gap-8 border-t border-outline-variant pt-8">
+          <div>
+            <span class="block text-3xl font-black text-primary counter-number" data-count="100" data-suffix="%">0%</span>
+            <span class="text-sm font-bold uppercase tracking-widest opacity-60">Artesanal</span>
+          </div>
+          <div>
+            <span class="block text-3xl font-black text-secondary">LOCAL</span>
+            <span class="text-sm font-bold uppercase tracking-widest opacity-60">Sourcing</span>
+          </div>
+        </div>
+      </div>
+      <div class="relative motion-reveal">
+        <div class="absolute -inset-4 border border-primary/10 rounded-lg -rotate-3"></div>
+        <div class="img-reveal-wrapper alt rounded-lg overflow-hidden relative z-10">
+        <img alt="Boutique setup" class="rounded-lg shadow-2xl relative z-10 w-full aspect-[4/5] object-cover img-reveal-target" src="/img/Compromiso_Local.jpeg"  loading="lazy" decoding="async" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-32">
+    <div class="text-center mb-16 px-4">
+      <h2 class="text-5xl md:text-7xl font-black text-charcoal-text tracking-tighter motion-reveal">MOMENTOS XIO</h2>
+      <p class="text-on-surface-variant mt-4 font-serif italic text-xl motion-reveal">Abre tu caja y deja que el antojo tome el control</p>
+    </div>
+    <div class="lifestyle-grid">
+      <div class="lifestyle-item col-span-12 md:col-span-4 row-span-2 motion-reveal" style="height:600px;">
+        <div class="img-reveal-wrapper h-full w-full">
+        <img alt="Lifestyle 1" src="/img/momentos_xio2.png"  loading="lazy" decoding="async" />
+        </div>
+      </div>
+      <div class="lifestyle-item col-span-12 md:col-span-8 h-[300px] motion-reveal">
+        <div class="img-reveal-wrapper h-full w-full alt">
+        <img alt="Lifestyle 2" src="/img/momentos_xio.jpeg"  loading="lazy" decoding="async" />
+        </div>
+      </div>
+      <div class="lifestyle-item col-span-12 md:col-span-4 h-[280px] mt-4 motion-reveal">
+        <div class="img-reveal-wrapper h-full w-full">
+        <img alt="Lifestyle 3" src="/img/momentos_xio3.jpeg"  loading="lazy" decoding="async" />
+        </div>
+      </div>
+      <div class="lifestyle-item col-span-12 md:col-span-4 h-[280px] -mt-10 md:mt-4 z-20 shadow-xl motion-reveal">
+        <div class="img-reveal-wrapper h-full w-full alt">
+        <img alt="Lifestyle 4" src="/img/image.png"  loading="lazy" decoding="async" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-32 px-[8%] bg-surface-container-low">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-20">
+        <h4 class="text-primary font-bold tracking-[0.2em] text-sm uppercase mb-4 italic motion-reveal">Pequeños Placeres</h4>
+        <h2 class="text-5xl md:text-7xl font-black text-charcoal-text tracking-tighter motion-reveal">COLECCIONES MINI</h2>
+        <p class="text-on-surface-variant mt-6 font-serif italic text-xl max-w-2xl mx-auto motion-reveal">La misma intensidad artesanal en un formato diseñado para compartir y degustar.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div class="group motion-reveal">
+          <div class="overflow-hidden rounded-lg mb-8 aspect-square bg-white shadow-xl">
+            <img alt="Trío Esencial" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="./img/trio_roles.jpg"  loading="lazy" decoding="async" />
+          </div>
+          <h3 class="text-2xl font-black text-charcoal-text mb-2 uppercase">Trío Esencial</h3>
+          <p class="text-on-surface-variant font-light leading-relaxed mb-4">Una selección curada de nuestros tres sabores insignia, perfectos para una cata personal.</p>
+          <span class="text-primary font-bold text-xl">$00.00</span>
+        </div>
+        <div class="group motion-reveal">
+          <div class="overflow-hidden rounded-lg mb-8 aspect-square bg-white shadow-xl">
+            <img alt="Cuarteto Clásico" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="./img/cuarteto.jpg"  loading="lazy" decoding="async" />
+          </div>
+          <h3 class="text-2xl font-black text-charcoal-text mb-2 uppercase">Cuarteto Clásico</h3>
+          <p class="text-on-surface-variant font-light leading-relaxed mb-4">Cuatro piezas de masa madre y canela Ceylán, el equilibrio ideal entre suavidad y frescura.</p>
+          <span class="text-primary font-bold text-xl">$00.00</span>
+        </div>
+        <div class="group motion-reveal">
+          <div class="overflow-hidden rounded-lg mb-8 aspect-square bg-white shadow-xl">
+            <img alt="Degustación Elite" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="./img/seis_roles.jpg"  loading="lazy" decoding="async" />
+          </div>
+          <h3 class="text-2xl font-black text-charcoal-text mb-2 uppercase">Degustación Especial</h3>
+          <p class="text-on-surface-variant font-light leading-relaxed mb-4">La experiencia definitiva: seis mini roles con glaseados premium y fresas de temporada.</p>
+          <span class="text-primary font-bold text-xl">$00.00</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-32 px-[8%] bg-surface-container-low">
+    <div class="max-w-3xl mx-auto">
+      <div class="text-center mb-20">
+        <h2 class="text-5xl md:text-7xl font-black text-charcoal-text tracking-tighter uppercase motion-reveal">DUDAS FRECUENTES</h2>
+        <p class="text-on-surface-variant mt-4 font-serif italic text-xl motion-reveal">Todo lo que necesitas saber sobre tus roles favoritos</p>
+      </div>
+      <div class="space-y-4" id="faq-container">
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>¿Hornenan roles todos los días?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>No. Para garantizar que recibas tus roles recién horneados y con el máximo cuidado artesanal, horneamos exclusivamente los días Miércoles y Sábados. 
+              Te sugerimos relizar tu pedido con anticipación para asegurar tu lote.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>¿Cuál es el secreto para disfrutarlos en su máximo explendor?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Recomendamos 15 a 20 segundos de calor en el microondas. Verás cómo la masa recupera su calidez esponjosa y el glaseado se vuelve irresistiblemente derretido.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>¿Los roles se hornean el mismo día de la entrega?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>¡Sí! Preparamos y horneamos ese mismo día dentro de los días establecidos. Los pedidos realizados antes de las 2:00 PM del día establecido se entregan el mismo día.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>¿Puedo pedir cajas para eventos, regalos o mesas de postres?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Creamos experiencias dulces inolvidables para bodas, cumpleaños y eventos corporativos. Escríbenos por WhatsApp y diseñaremos un menú a tu medida.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer id="pedir">
+    <h2 class="motion-reveal">¿LISTO PARA TU ANTOJO?</h2>
+    <p class="motion-reveal" style="font-size:1.2rem; opacity:0.8;">Pedidos especiales y entregas a domicilio todos los días.</p>
+    <div class="motion-reveal">
+      <a class="btn-whatsapp" href="https://wa.me/" target="_blank">Ordenar por WhatsApp</a>
+    </div>
+    <p style="margin-top:60px; font-size:0.8rem; opacity:0.4;">© 2026 Xio Rolls. Made with love.</p>
+  </footer>
+
+  <script id="fragmentShader" type="x-shader/x-fragment">
+    precision highp float;
+    varying vec2 v_texCoord;
+    uniform float u_time;
+    uniform vec2 u_resolution;
+
+    void main() {
+      vec2 uv = v_texCoord;
+      float noise = sin(uv.x * 3.0 + u_time * 0.5) * cos(uv.y * 3.0 + u_time * 0.4);
+      noise += sin(uv.x * 5.0 - u_time * 0.7) * cos(uv.y * 2.0 + u_time * 0.3) * 0.5;
+      vec3 color1 = vec3(0.98, 0.96, 0.94);
+      vec3 color2 = vec3(0.96, 0.92, 0.88);
+      vec3 finalColor = mix(color1, color2, clamp(noise * 0.3 + 0.5, 0.0, 1.0));
+      gl_FragColor = vec4(finalColor, 1.0);
+    }
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // ========== LENIS SMOOTH SCROLL ==========
+      const lenis = new Lenis({ lerp: 0.08, smoothWheel: true });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((time) => lenis.raf(time * 1000));
+      gsap.ticker.lagSmoothing(0);
+
+      // ========== PRELOADER ==========
+      const preloader = document.getElementById('preloader');
+      const heroMainEl = document.getElementById('hero-main');
+      const heroSubEl = document.getElementById('hero-sub');
+      const heroBannerEl = document.getElementById('hero-banner');
+
+      function hidePreloader() {
+        preloader.classList.add('hidden');
+        lenis.start();
+        // Start hero video only after preloader is gone
+        video.play().catch(() => {});
+        initTypewriter();
+      }
+      lenis.stop();
+
+      setTimeout(() => {
+        hidePreloader();
+      }, 2800);
+
+      // ========== CURSOR PERSONALIZADO ==========
+      // Se omite por completo en dispositivos táctiles (móviles gama baja incluidos):
+      // el CSS ya lo ocultaba con @media(pointer:coarse), pero el bucle de animación
+      // y los listeners seguían corriendo en segundo plano gastando batería/CPU.
+      const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
+      if (!isCoarsePointer) {
+        const cursor = document.getElementById('custom-cursor');
+        const cursorDot = document.getElementById('custom-cursor-dot');
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          cursorDot.style.left = mouseX + 'px';
+          cursorDot.style.top = mouseY + 'px';
+          if (!cursor.classList.contains('visible')) {
+            cursor.classList.add('visible');
+            cursorDot.classList.add('visible');
+          }
+        }, { passive: true });
+
+        function animateCursor() {
+          cursorX += (mouseX - cursorX) * 0.15;
+          cursorY += (mouseY - cursorY) * 0.15;
+          cursor.style.left = cursorX + 'px';
+          cursor.style.top = cursorY + 'px';
+          requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        const hoverTargets = 'a, button, .product-card, .faq-question, .lifestyle-item, .btn-whatsapp, .badge-box';
+        document.querySelectorAll(hoverTargets).forEach(el => {
+          el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+          el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+        });
+      }
+
+      // ========== WEBGL BACKGROUND ==========
+      const canvas = document.getElementById('bg-canvas');
+      const gl = canvas.getContext('webgl', {
+        alpha: false,           // el fondo siempre es opaco, evita blending extra en la GPU
+        antialias: false,       // un quad de pantalla completa no tiene bordes que suavizar
+        depth: false,
+        stencil: false,
+        powerPreference: 'low-power',
+        preserveDrawingBuffer: false
+      });
+      if (gl) {
+        const program = gl.createProgram();
+        const vsSource = `attribute vec4 a_position; varying vec2 v_texCoord; void main() { gl_Position = a_position; v_texCoord = a_position.xy * 0.5 + 0.5; }`;
+        const fsSource = document.getElementById('fragmentShader').textContent;
+        function createShader(gl, type, source) { const shader = gl.createShader(type); gl.shaderSource(shader, source); gl.compileShader(shader); return shader; }
+        const vs = createShader(gl, gl.VERTEX_SHADER, vsSource);
+        const fs = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
+        gl.attachShader(program, vs); gl.attachShader(program, fs); gl.linkProgram(program); gl.useProgram(program);
+        const positionBuffer = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+        const positionLoc = gl.getAttribLocation(program, "a_position"); gl.enableVertexAttribArray(positionLoc);
+        gl.vertexAttribPointer(positionLoc, 2, gl.FLOAT, false, 0, 0);
+        const timeLoc = gl.getUniformLocation(program, "u_time");
+
+        // Tope de devicePixelRatio: en celulares gama baja con pantallas de alta densidad
+        // (dpr 3+), renderizar el shader a resolución nativa cada frame es innecesariamente
+        // costoso para un fondo difuso al 60% de opacidad. Con 1.5 se ve igual mantiene 60fps.
+        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        let resizeRaf = null;
+        function resizeCanvas() {
+          canvas.width = Math.round(window.innerWidth * dpr);
+          canvas.height = Math.round(window.innerHeight * dpr);
+          gl.viewport(0, 0, canvas.width, canvas.height);
+        }
+        resizeCanvas();
+        // Antes el canvas se redimensionaba en CADA frame de animación (~60 veces por
+        // segundo), forzando una reasignación del framebuffer constantemente. Ahora solo
+        // se redimensiona cuando la ventana realmente cambia de tamaño.
+        window.addEventListener('resize', () => {
+          if (resizeRaf) cancelAnimationFrame(resizeRaf);
+          resizeRaf = requestAnimationFrame(resizeCanvas);
+        }, { passive: true });
+
+        // Pausa el render mientras la pestaña/app no está visible (ahorra batería en móviles,
+        // sin ningún cambio visible ya que el usuario no está viendo la pantalla).
+        let isPageVisible = true;
+        document.addEventListener('visibilitychange', () => { isPageVisible = !document.hidden; }, { passive: true });
+
+        function render(time) {
+          if (isPageVisible) {
+            gl.uniform1f(timeLoc, time * 0.001);
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+          }
+          requestAnimationFrame(render);
+        }
+        requestAnimationFrame(render);
+      }
+
+      // ========== TYPEWRITER HERO ==========
+      const typewriterTarget = document.getElementById('typewriter-target');
+      const typewriterCursor = document.getElementById('typewriter-cursor');
+      const mainText = "IRRESISTIBLEMENTE SUAVES";
+      let typeIndex = 0;
+
+      function initTypewriter() {
+        heroMainEl.style.opacity = "1";
+        typeIndex = 0;
+        typewriterTarget.textContent = "";
+        typeNextChar();
+      }
+
+      function typeNextChar() {
+        if (typeIndex < mainText.length) {
+          typewriterTarget.textContent += mainText.charAt(typeIndex);
+          typeIndex++;
+          setTimeout(typeNextChar, 80 + Math.random() * 60);
+        } else {
+          setTimeout(() => {
+            typewriterCursor.style.display = 'none';
+            revealRestOfHero();
+          }, 600);
+        }
+      }
+
+      function splitTextIntoWords(element) {
+        const childNodes = Array.from(element.childNodes);
+        element.innerHTML = "";
+        const allSpans = [];
+        childNodes.forEach(node => {
+          if (node.nodeType === Node.TEXT_NODE) {
+            const parts = node.textContent.split(/(\s+)/);
+            parts.forEach(part => {
+              if (part.trim() === "") { element.appendChild(document.createTextNode(part)); } 
+              else {
+                const span = document.createElement("span");
+                span.textContent = part; span.style.opacity = "0"; span.style.transform = "translateY(30px)";
+                element.appendChild(span); allSpans.push(span);
+              }
+            });
+          } else if (node.nodeType === Node.ELEMENT_NODE) {
+            node.style.opacity = "0"; node.style.transform = "translateY(30px)";
+            element.appendChild(node); allSpans.push(node);
+          }
+        });
+        return allSpans;
+      }
+
+      const { animate, inView, stagger } = Motion;
+
+      let restRevealed = false;
+      function revealRestOfHero() {
+        if (restRevealed) return;
+        restRevealed = true;
+        heroSubEl.style.opacity = "1";
+        heroBannerEl.style.opacity = "1";
+        const heroSubWords = splitTextIntoWords(heroSubEl);
+        const heroBannerWords = splitTextIntoWords(heroBannerEl);
+        animate(heroSubWords, { opacity: [0, 1], y: [30, 0] }, { duration: 0.8, delay: stagger(0.05), easing: [0.22, 1, 0.36, 1] });
+        animate(heroBannerWords, { opacity: [0, 1], y: [30, 0] }, { duration: 0.8, delay: stagger(0.05, { start: 0.15 }), easing: [0.22, 1, 0.36, 1] });
+      }
+
+      const video = document.getElementById("hero-video");
+      video.addEventListener("timeupdate", () => { 
+        if (video.currentTime > video.duration * 0.4 && !restRevealed) revealRestOfHero(); 
+      });
+      window.addEventListener("scroll", () => { 
+        if (window.scrollY > 40 && !restRevealed) revealRestOfHero(); 
+      }, { passive: true });
+
+      document.querySelectorAll(".motion-reveal").forEach((el) => {
+        const words = splitTextIntoWords(el);
+        inView(el, () => {
+          animate(words, { opacity: [0, 1], y: [30, 0] },
+            { 
+                duration: 1,
+                delay: stagger(0.1),
+                easing: [0.22, 1, 0.36, 1] 
+            });
+        }, {amount: 0.75,});
+        
+      });
+
+      // --- ACTIVE CARD ON CENTER + DYNAMIC BACKGROUND ---
+      const productCards = document.querySelectorAll('.product-card');
+      const dynamicBg = document.querySelector('.products-dynamic-bg');
+
+      function updateActiveCard() {
+        const viewportCenter = window.innerWidth / 2;
+        let closestCard = null;
+        let minDistance = Infinity;
+
+        productCards.forEach(card => {
+          const rect = card.getBoundingClientRect();
+          const cardCenter = rect.left + rect.width / 2;
+          const distance = Math.abs(viewportCenter - cardCenter);
+
+          if (distance < minDistance) {
+            minDistance = distance;
+            closestCard = card;
+          }
+        });
+
+        productCards.forEach(card => {
+          if (card === closestCard) {
+            card.classList.add('active-center');
+          } else {
+            card.classList.remove('active-center');
+          }
+        });
+
+        if (closestCard && dynamicBg) {
+          const bgColor = closestCard.getAttribute('data-bg');
+          if (bgColor) {
+            dynamicBg.style.backgroundColor = bgColor;
+          }
+        }
+      }
+
+      gsap.registerPlugin(ScrollTrigger);
+      // Evita que ScrollTrigger recalcule sus medidas cuando la barra de direcciones del
+      // navegador móvil aparece/desaparece al hacer scroll (causa saltos y baja fps en
+      // Chrome/Safari móvil). Recomendación oficial de GSAP para mobile.
+      ScrollTrigger.config({ ignoreMobileResize: true });
+
+      const scrollTrack = document.getElementById("scroll-track");
+      if(scrollTrack) {
+        gsap.to(scrollTrack, {
+          x: () => -(scrollTrack.scrollWidth - window.innerWidth + 150),
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".spylt-products-wrapper",
+            start: "top top",
+            end: () => `+=${scrollTrack.scrollWidth}`,
+            pin: true, scrub: 1, invalidateOnRefresh: true,
+            anticipatePin: 1,
+            onUpdate: updateActiveCard,
+            onLeave: () => { if(dynamicBg) dynamicBg.style.backgroundColor = 'transparent'; },
+            onLeaveBack: () => { if(dynamicBg) dynamicBg.style.backgroundColor = 'transparent'; },
+            onEnter: updateActiveCard,
+            onEnterBack: updateActiveCard
+          }
+        });
+      }
+
+      gsap.to("#history-parallax-1 img", {
+        y: "20%",
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#historia",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true
+        }
+      });
+
+      gsap.from("#bg-text-1", {
+        x: -200,
+        opacity: 0,
+        duration: 2,
+        scrollTrigger: {
+          trigger: "#historia",
+          start: "top 80%",
+          scrub: 1
+        }
+      });
+
+      inView(".product-card", (info) => {
+        animate(info.target, { opacity: [0, 1], x: [100, 0], rotateY: [25, 0] }, { duration: 1.2, easing: [0.16, 1, 0.3, 1] });
+      });
+
+      // ========== TILT 3D EN TARJETAS ==========
+      productCards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -12;
+          const rotateY = ((x - centerX) / centerX) * 12;
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+        });
+      });
+
+      // ========== CONTADORES ANIMADOS ==========
+      const counters = document.querySelectorAll('.counter-number');
+      counters.forEach(counter => {
+        const target = parseInt(counter.getAttribute('data-count'));
+        const suffix = counter.getAttribute('data-suffix') || '';
+        gsap.fromTo(counter, 
+          { innerText: 0 },
+          {
+            innerText: target,
+            duration: 2.5,
+            ease: "power2.out",
+            snap: { innerText: 1 },
+            scrollTrigger: {
+              trigger: counter,
+              start: "top 85%",
+              once: true
+            },
+            onUpdate: function() {
+              counter.textContent = Math.round(this.targets()[0].innerText) + suffix;
+            }
+          }
+        );
+      });
+
+      // ========== IMAGE REVEAL SCROLL ==========
+      document.querySelectorAll('.img-reveal-wrapper').forEach(wrapper => {
+        ScrollTrigger.create({
+          trigger: wrapper,
+          start: "top 80%",
+          once: true,
+          onEnter: () => wrapper.classList.add('revealed')
+        });
+      });
+
+      const faqItems = document.querySelectorAll('.faq-item');
+      
+      faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        const answer = item.querySelector('.faq-answer');
+        const icon = question.querySelector('.icon');
+
+        question.addEventListener('click', function(e) {
+          const isOpen = answer.classList.contains('open');
+
+          document.querySelectorAll('.faq-answer').forEach(a => {
+            if (a !== answer && a.classList.contains('open')) {
+              a.classList.remove('open');
+              a.style.height = '0px';
+              a.previousElementSibling.querySelector('.icon').classList.remove('open');
+              a.previousElementSibling.setAttribute('aria-expanded', 'false');
+            }
+          });
+
+          if (isOpen) {
+            answer.classList.remove('open');
+            answer.style.height = '0px';
+            icon.classList.remove('open');
+            this.setAttribute('aria-expanded', 'false');
+          } else {
+            const height = answer.scrollHeight + 'px';
+            answer.style.height = height;
+            answer.classList.add('open');
+            icon.classList.add('open');
+            this.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
+
+      const header = document.getElementById('site-header');
+      let lastScrollY = window.scrollY;
+      let ticking = false;
+
+      const updateHeader = () => {
+        const currentScrollY = window.scrollY;
+        if (currentScrollY > 50) {
+          header.style.opacity = '0';
+        } else {
+          header.style.opacity = '1';
+        }
+        lastScrollY = currentScrollY;
+        ticking = false;
+      };
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          requestAnimationFrame(updateHeader);
+          ticking = true;
+        }
+      });
+
+      updateHeader();
+    });
+  </script>
+</body>
+</html>
