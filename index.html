@@ -124,7 +124,6 @@
     }
 
     /* ===== FONDO ATMOSFÉRICO ULTRA LIGERO (CSS only – casi 0 GPU/CPU) ===== */
-    /* Solo transforms + opacity. Sin filter:blur, sin canvas, sin requestAnimationFrame */
     #bg-atmosphere {
       position: fixed;
       inset: 0;
@@ -177,7 +176,6 @@
       animation: atmosphereDrift3 24s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
     }
 
-    /* Movimiento orgánico y fluido (más pasos = más natural) */
     @keyframes atmosphereDrift1 {
       0%   { transform: translate3d(0%, 0%, 0) scale(1) rotate(0deg); }
       33%  { transform: translate3d(4%, 3%, 0) scale(1.06) rotate(1.5deg); }
@@ -196,7 +194,6 @@
       100% { transform: translate3d(3%, -3%, 0) scale(0.97) rotate(-1deg); }
     }
 
-    /* En móviles de gama baja reducimos un poco el tamaño para aún menos overdraw */
     @media (max-width: 768px) {
       #bg-atmosphere {
         opacity: 0.55;
@@ -206,14 +203,12 @@
       #bg-atmosphere .blob-3 { width: 45vmax; height: 45vmax; }
     }
 
-    /* Prefer reduced motion → completamente estático */
     @media (prefers-reduced-motion: reduce) {
       #bg-atmosphere .blob {
         animation: none !important;
       }
     }
 
-    /* HEADER TRANSPARENTE (SOLO LOGO, DESAPARECE AL SCROLL) */
     #site-header {
       position: absolute;
       top: 20px;
@@ -379,36 +374,78 @@
       height: 100dvh;
       min-height: -webkit-fill-available;
     }
+
+    /* ===== FONDO DINÁMICO OPTIMIZADO (usando mask-image en vez de filter:blur) ===== */
     .products-dynamic-bg {
       position: absolute;
       top: 50%;
       left: 50%;
       width: 70vw;
       height: 70vh;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%) translateZ(0);
       border-radius: 50%;
-      filter: blur(160px);
-      opacity: 1;
-      z-index: 0;
       pointer-events: none;
-      will-change: transform;
+      z-index: 0;
+      background: transparent;
+      -webkit-mask-image: radial-gradient(
+        ellipse 60% 60% at 50% 50%,
+        #000 0%,
+        #000 28%,
+        rgba(0,0,0,0.7) 45%,
+        rgba(0,0,0,0.3) 60%,
+        transparent 75%
+      );
+      mask-image: radial-gradient(
+        ellipse 60% 60% at 50% 50%,
+        #000 0%,
+        #000 28%,
+        rgba(0,0,0,0.7) 45%,
+        rgba(0,0,0,0.3) 60%,
+        transparent 75%
+      );
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-size: 100% 100%;
+      mask-size: 100% 100%;
+      contain: paint layout;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      will-change: auto;
     }
-    .products-dynamic-bg-color {
+
+    .products-dynamic-bg__color {
       position: absolute;
       inset: 0;
-      border-radius: inherit;
       background-color: transparent;
       transition: background-color 0.9s var(--ease-out-expo);
-      will-change: background-color;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      transform: translateZ(0);
     }
 
     @media (max-width: 768px) {
       .products-dynamic-bg {
         width: 90vw;
         height: 60vh;
-        filter: blur(80px); /* mucho más barato en móvil */
+        -webkit-mask-image: radial-gradient(
+          ellipse 55% 55% at 50% 50%,
+          #000 0%,
+          #000 22%,
+          rgba(0,0,0,0.6) 40%,
+          rgba(0,0,0,0.2) 58%,
+          transparent 72%
+        );
+        mask-image: radial-gradient(
+          ellipse 55% 55% at 50% 50%,
+          #000 0%,
+          #000 22%,
+          rgba(0,0,0,0.6) 40%,
+          rgba(0,0,0,0.2) 58%,
+          transparent 72%
+        );
       }
     }
+
     .spylt-scroll-container {
       display: flex;
       align-items: center;
@@ -438,6 +475,11 @@
       align-items: center;
       flex-shrink: 0;
     }
+
+    /* [PATCH 2] ===== PRODUCT CARD – OPTIMIZADO PARA MÓVIL ===== */
+    /* La capa compuesta ahora se aplica a la CARD completa (no a la imagen individual).
+       Así el GPU rasteriza todo el bloque (imagen + sombra pre-rasterizada) y lo mueve
+       como un único sprite, sin tener que recalcular sombras ni siluetas. */
     .product-card {
       position: relative;
       flex-shrink: 0;
@@ -446,28 +488,78 @@
       transform-style: preserve-3d;
       transition: transform 0.1s ease-out;
       touch-action: pan-y;
-      will-change: transform;
+      will-change: auto; /* Lo activamos dinámicamente en JS solo durante animaciones */
+      transform: translate3d(0, 0, 0);
+      -webkit-transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
     }
+
+    /* [PATCH 2] Sombra PRE-rasterizada como pseudo-capa estática.
+       El GPU la mueve sin recalcular la silueta del PNG en cada frame. */
+    .card-shadow {
+      position: absolute;
+      left: 8%;
+      right: 8%;
+      bottom: -6%;
+      height: 28%;
+      background: radial-gradient(
+        ellipse at 50% 40%,
+        rgba(43, 30, 26, 0.32) 0%,
+        rgba(43, 30, 26, 0.14) 40%,
+        transparent 72%
+      );
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: -1;
+      transform: translate3d(0, 0, 0) scale(1);
+      transition: transform 0.6s var(--ease-out-expo), opacity 0.6s var(--ease-out-expo);
+    }
+
+    .product-card:hover .card-shadow,
+    .product-card.active-center .card-shadow {
+      transform: translate3d(0, 10px, 0) scale(1.12);
+      opacity: 0.8;
+    }
+
     .product-card .spylt-image-only {
       transform-style: preserve-3d;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
     }
+
+    /* [PATCH 2] La imagen ya NO lleva drop-shadow. La sombra la maneja .card-shadow. */
     .spylt-image-only {
       width: 720px;
       height: auto;
       display: block;
-      filter: drop-shadow(0 30px 40px rgba(0,0,0,0.15));
-      transition: transform 0.6s var(--ease-out-expo), filter 0.6s var(--ease-out-expo);
+      filter: none; /* ⚠️ CRÍTICO: sin drop-shadow */
+      transition: transform 0.6s var(--ease-out-expo);
       cursor: pointer;
-      will-change: transform;
+      will-change: auto;
       -webkit-transform: translateZ(0);
       transform: translateZ(0);
     }
+
     .product-card:hover .spylt-image-only,
     .product-card.active-center .spylt-image-only {
       transform: translateY(-25px) rotate(2deg) scale(1.05);
-      filter: drop-shadow(0 50px 60px rgba(0,0,0,0.22));
+    }
+
+    /* [PATCH 2] Sombra más pequeña en móvil para menos overdraw */
+    @media (max-width: 768px) {
+      .card-shadow {
+        left: 4%;
+        right: 4%;
+        bottom: -4%;
+        height: 22%;
+        background: radial-gradient(
+          ellipse at 50% 40%,
+          rgba(43, 30, 26, 0.28) 0%,
+          rgba(43, 30, 26, 0.10) 45%,
+          transparent 70%
+        );
+      }
     }
 
     .sensory-guide {
@@ -718,7 +810,6 @@
       font-weight: 300;
     }
 
-    /* ===== PRELOADER ELEGANTE ===== */
     .preloader {
       position: fixed;
       top: 0; left: 0;
@@ -807,7 +898,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ===== CURSOR PERSONALIZADO ===== */
     .custom-cursor {
       width: 32px; height: 32px;
       border: 1.5px solid rgba(43, 30, 26, 0.35);
@@ -847,7 +937,6 @@
       .custom-cursor, .custom-cursor-dot { display: none !important; }
     }
 
-    /* ===== TYPEWRITER ===== */
     .typewriter-text {
       display: inline;
     }
@@ -865,7 +954,6 @@
       50% { opacity: 0; }
     }
 
-    /* ===== IMAGE REVEAL ===== */
     .img-reveal-wrapper {
       position: relative;
       overflow: hidden;
@@ -895,13 +983,11 @@
       transform-origin: left;
     }
 
-    /* ===== COUNTER ===== */
     .counter-number {
       display: inline-block;
       font-variant-numeric: tabular-nums;
     }
 
-    /* ===== SCROLLBAR STYLING (para Lenis) ===== */
     html.lenis, html.lenis body {
       height: auto;
     }
@@ -920,18 +1006,15 @@
   </style>
 </head>
 <body>
-  <!-- PRELOADER ELEGANTE -->
   <div class="preloader" id="preloader">
     <div class="preloader-logo">XIO <span>Rolls</span><div class="fill-mask"></div></div>
     <div class="preloader-sub">Preparando tu experiencia...</div>
     <div class="preloader-bar"></div>
   </div>
 
-  <!-- CURSOR PERSONALIZADO -->
   <div class="custom-cursor" id="custom-cursor"></div>
   <div class="custom-cursor-dot" id="custom-cursor-dot"></div>
 
-  <!-- Fondo atmosférico ultra ligero (CSS only) -->
   <div id="bg-atmosphere" aria-hidden="true">
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
@@ -967,8 +1050,8 @@
 
   <div class="pin-spacer">
     <section class="spylt-products-wrapper" id="menu">
-      <div class="products-dynamic-bg">
-        <div class="products-dynamic-bg-color"></div>
+      <div class="products-dynamic-bg" aria-hidden="true">
+        <div class="products-dynamic-bg__color"></div>
       </div>
       <div class="spylt-scroll-container" id="scroll-track">
         <div class="spylt-header-block">
@@ -979,35 +1062,46 @@
           </h2>
         </div>
         <div class="spylt-cards-track">
+          <!-- [PATCH 1] Añadimos <div class="card-shadow"> a cada card -->
           <div class="product-card" data-bg="#51AFF7">
+            <div class="card-shadow" aria-hidden="true"></div>
             <img alt="Rol de Fresas con Crema" class="spylt-image-only" src="./img/rol (1).png" decoding="async" />
           </div>
           <div class="product-card" data-bg="#EE7C62">
+            <div class="card-shadow" aria-hidden="true"></div>
             <img alt="Rol Doble Crema" class="spylt-image-only" src="./img/rol (2).png" decoding="async" />
           </div>
           <div class="product-card" data-bg="#642B15">
-            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (3).png" decoding="async" />
+            <div class="card-shadow" aria-hidden="true"></div>
+            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (3).png" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#BD9EF4">
-            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (4).png" decoding="async" />
+            <div class="card-shadow" aria-hidden="true"></div>
+            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (4).png" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#CF805B">
-            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (5).png" decoding="async" />
+            <div class="card-shadow" aria-hidden="true"></div>
+            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (5).png" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#EED7B0">
-            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (6).png" decoding="async" />
+            <div class="card-shadow" aria-hidden="true"></div>
+            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (6).png" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#B97242">
-            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (7).png" decoding="async" />
+            <div class="card-shadow" aria-hidden="true"></div>
+            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (7).png" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#F1D4AD">
-            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (8).png" decoding="async" />
+            <div class="card-shadow" aria-hidden="true"></div>
+            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (8).png" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#C7835A">
-            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (9).png" decoding="async" />
+            <div class="card-shadow" aria-hidden="true"></div>
+            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (9).png" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#25766D">
-            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (10).png" decoding="async" />
+            <div class="card-shadow" aria-hidden="true"></div>
+            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (10).png" loading="lazy" decoding="async" />
           </div>
         </div>
       </div>
@@ -1210,30 +1304,21 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // ========== MOBILE / PERFORMANCE DETECTION ==========
       const isCoarse = window.matchMedia('(pointer: coarse)').matches;
       const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       const isMobile = isCoarse || isMobileUA || window.innerWidth < 768;
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // ========== LENIS SMOOTH SCROLL ==========
-      let lenis = null;
-      if (!isMobile) {
-        lenis = new Lenis({
-          lerp: 0.08,
-          smoothWheel: true,
-          syncTouch: false,
-          touchMultiplier: 1
-        });
-        lenis.on('scroll', ScrollTrigger.update);
-        gsap.ticker.add((time) => lenis.raf(time * 1000));
-        gsap.ticker.lagSmoothing(0);
-      } else {
-        // En móvil usamos scroll nativo
-        window.addEventListener('scroll', ScrollTrigger.update, { passive: true });
-      }
+      const lenis = new Lenis({
+        lerp: isMobile ? 0.12 : 0.08,
+        smoothWheel: !isMobile,
+        syncTouch: true,
+        touchMultiplier: isMobile ? 1.2 : 1
+      });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((time) => lenis.raf(time * 1000));
+      gsap.ticker.lagSmoothing(0);
 
-      // ========== PRELOADER ==========
       const preloader = document.getElementById('preloader');
       const heroMainEl = document.getElementById('hero-main');
       const heroSubEl = document.getElementById('hero-sub');
@@ -1242,26 +1327,16 @@
 
       function hidePreloader() {
         preloader.classList.add('hidden');
-        if (lenis) {
-          lenis.start();
-        } else {
-          document.body.style.overflow = '';
-        }
-        // Start hero video only after preloader is gone
+        lenis.start();
         if (video) video.play().catch(() => {});
         initTypewriter();
       }
-      if (lenis) {
-        lenis.stop();
-      } else {
-        document.body.style.overflow = 'hidden';
-      }
+      lenis.stop();
 
       setTimeout(() => {
         hidePreloader();
       }, isMobile ? 2200 : 2800);
 
-      // ========== CURSOR PERSONALIZADO (solo fine pointer) ==========
       const cursor = document.getElementById('custom-cursor');
       const cursorDot = document.getElementById('custom-cursor-dot');
       if (!isCoarse && cursor && cursorDot) {
@@ -1295,7 +1370,6 @@
         });
       }
 
-      // ========== TYPEWRITER HERO ==========
       const typewriterTarget = document.getElementById('typewriter-target');
       const typewriterCursor = document.getElementById('typewriter-cursor');
       const mainText = "IRRESISTIBLEMENTE SUAVES";
@@ -1380,85 +1454,88 @@
         
       });
 
-      // ========== ACTIVE CARD ON CENTER + DYNAMIC BACKGROUND ==========
+      // ========== ACTIVE CARD + DYNAMIC BACKGROUND (OPTIMIZADO) ==========
       const productCards = document.querySelectorAll('.product-card');
-      const dynamicBg = document.querySelector('.products-dynamic-bg-color'); // ahora apuntamos al hijo
-
-      let lastActiveCard = null;
-      let lastBgColor = null;
-      let cardCenters = [];
-      let scrollTrackOriginalLeft = 0;
-      let scrollDistance = 0;
-
+      const dynamicBgColor = document.querySelector('.products-dynamic-bg__color');
       const scrollTrack = document.getElementById("scroll-track");
 
-      function cacheCardData() {
-        if (!scrollTrack) return;
-        scrollTrackOriginalLeft = scrollTrack.offsetLeft;
-        const scrollTrackRect = scrollTrack.getBoundingClientRect();
-        cardCenters = [];
-        productCards.forEach(card => {
-          const cardRect = card.getBoundingClientRect();
-          const cardCenterRelative = cardRect.left + cardRect.width / 2 - scrollTrackRect.left;
-          cardCenters.push(cardCenterRelative);
+      let currentActiveIndex = -1;
+      let cachedCardOffsets = [];
+
+      function cacheCardOffsets() {
+        cachedCardOffsets = [];
+        productCards.forEach((card) => {
+          cachedCardOffsets.push({
+            left: card.offsetLeft,
+            width: card.offsetWidth,
+            color: card.getAttribute('data-bg')
+          });
         });
-        scrollDistance = scrollTrack.scrollWidth - window.innerWidth + 150;
       }
 
-      // Llamar al cargar y en cada refresh
-      cacheCardData();
+      function setActiveIndex(index) {
+        if (index === currentActiveIndex) return;
+        currentActiveIndex = index;
+
+        productCards.forEach((card, i) => {
+          if (i === index) card.classList.add('active-center');
+          else card.classList.remove('active-center');
+        });
+
+        if (dynamicBgColor && cachedCardOffsets[index]) {
+          const color = cachedCardOffsets[index].color;
+          dynamicBgColor.style.backgroundColor = color || 'transparent';
+        }
+      }
+
+      function clearDynamicBg() {
+        currentActiveIndex = -1;
+        productCards.forEach(card => card.classList.remove('active-center'));
+        if (dynamicBgColor) dynamicBgColor.style.backgroundColor = 'transparent';
+      }
 
       gsap.registerPlugin(ScrollTrigger);
 
       if (scrollTrack) {
+        requestAnimationFrame(cacheCardOffsets);
+
+        ScrollTrigger.addEventListener("refreshInit", cacheCardOffsets);
+
         gsap.to(scrollTrack, {
           x: () => -(scrollTrack.scrollWidth - window.innerWidth + 150),
           ease: "none",
-          force3D: true,
           scrollTrigger: {
             trigger: ".spylt-products-wrapper",
             start: "top top",
             end: () => `+=${scrollTrack.scrollWidth}`,
             pin: true,
-            scrub: isMobile ? 0.3 : 1,
+            scrub: 1,
             invalidateOnRefresh: true,
-            anticipatePin: 1,
-            onUpdate: function(self) {
-              const progress = self.progress;
-              const scrollX = progress * scrollDistance;
+            onUpdate: (self) => {
+              if (!cachedCardOffsets.length) return;
+
+              const travel = scrollTrack.scrollWidth - window.innerWidth;
+              const trackX = self.progress * travel;
               const viewportCenter = window.innerWidth / 2;
-              let closestIndex = -1;
+              const centerPoint = viewportCenter + trackX;
+
+              let closestIndex = 0;
               let minDistance = Infinity;
-
-              cardCenters.forEach((centerRelative, index) => {
-                const cardViewportCenter = scrollTrackOriginalLeft + centerRelative - scrollX;
-                const distance = Math.abs(viewportCenter - cardViewportCenter);
-                if (distance < minDistance) {
-                  minDistance = distance;
-                  closestIndex = index;
-                }
-              });
-
-              if (closestIndex >= 0) {
-                const closestCard = productCards[closestIndex];
-                if (closestCard !== lastActiveCard) {
-                  productCards.forEach(card => card.classList.remove('active-center'));
-                  closestCard.classList.add('active-center');
-                  lastActiveCard = closestCard;
-
-                  const bgColor = closestCard.getAttribute('data-bg');
-                  if (bgColor && bgColor !== lastBgColor) {
-                    dynamicBg.style.backgroundColor = bgColor;
-                    lastBgColor = bgColor;
-                  }
+              for (let i = 0; i < cachedCardOffsets.length; i++) {
+                const c = cachedCardOffsets[i];
+                const cardCenter = c.left + c.width / 2;
+                const dist = Math.abs(centerPoint - cardCenter);
+                if (dist < minDistance) {
+                  minDistance = dist;
+                  closestIndex = i;
                 }
               }
+              setActiveIndex(closestIndex);
             },
-            onRefresh: cacheCardData,
-            onLeave: () => { if(dynamicBg) dynamicBg.style.backgroundColor = 'transparent'; },
-            onLeaveBack: () => { if(dynamicBg) dynamicBg.style.backgroundColor = 'transparent'; },
-            onEnter: () => { cacheCardData(); },
-            onEnterBack: () => { cacheCardData(); }
+            onLeave: clearDynamicBg,
+            onLeaveBack: clearDynamicBg,
+            onEnter: () => setActiveIndex(0),
+            onEnterBack: () => setActiveIndex(cachedCardOffsets.length - 1)
           }
         });
       }
@@ -1485,11 +1562,20 @@
         }
       });
 
+      // [PATCH 3] Animación de entrada con liberación de will-change tras completar
       inView(".product-card", (info) => {
-        animate(info.target, { opacity: [0, 1], x: [100, 0], rotateY: [25, 0] }, { duration: 1.2, easing: [0.16, 1, 0.3, 1] });
+        const card = info.target;
+        card.style.willChange = 'transform, opacity';
+        animate(card, { opacity: [0, 1], x: [100, 0], rotateY: [25, 0] }, { 
+          duration: 1.2, 
+          easing: [0.16, 1, 0.3, 1],
+          onComplete: () => { 
+            card.style.willChange = 'auto'; 
+          }
+        });
       });
 
-      // ========== TILT 3D EN TARJETAS (solo desktop / fine pointer) ==========
+      // Tilt 3D solo en desktop/fine pointer
       if (!isCoarse) {
         productCards.forEach(card => {
           card.addEventListener('mousemove', (e) => {
@@ -1508,7 +1594,6 @@
         });
       }
 
-      // ========== CONTADORES ANIMADOS ==========
       const counters = document.querySelectorAll('.counter-number');
       counters.forEach(counter => {
         const target = parseInt(counter.getAttribute('data-count'));
@@ -1532,7 +1617,6 @@
         );
       });
 
-      // ========== IMAGE REVEAL SCROLL ==========
       document.querySelectorAll('.img-reveal-wrapper').forEach(wrapper => {
         ScrollTrigger.create({
           trigger: wrapper,
@@ -1577,7 +1661,6 @@
       });
 
       const header = document.getElementById('site-header');
-      let lastScrollY = window.scrollY;
       let ticking = false;
 
       const updateHeader = () => {
@@ -1587,7 +1670,6 @@
         } else {
           header.style.opacity = '1';
         }
-        lastScrollY = currentScrollY;
         ticking = false;
       };
 
@@ -1600,11 +1682,16 @@
 
       updateHeader();
 
-      // Refresh ScrollTrigger after fonts/images settle (helps mobile layout & pin accuracy)
       if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(() => ScrollTrigger.refresh());
+        document.fonts.ready.then(() => {
+          cacheCardOffsets();
+          ScrollTrigger.refresh();
+        });
       }
-      window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
+      window.addEventListener("load", () => {
+        cacheCardOffsets();
+        ScrollTrigger.refresh();
+      }, { once: true });
     });
   </script>
 </body>
