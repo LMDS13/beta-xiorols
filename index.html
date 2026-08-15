@@ -423,25 +423,25 @@
       transform: translateZ(0);
     }
 
-    @media (max-width: 768px) {
+        @media (max-width: 768px) {
       .products-dynamic-bg {
-        width: 90vw;
-        height: 60vh;
+        width: 100vw;   /* antes 90vw */
+        height: 72vh;   /* antes 60vh */
         -webkit-mask-image: radial-gradient(
-          ellipse 55% 55% at 50% 50%,
+          ellipse 60% 60% at 50% 50%,
           #000 0%,
-          #000 22%,
-          rgba(0,0,0,0.6) 40%,
-          rgba(0,0,0,0.2) 58%,
-          transparent 72%
+          #000 28%,
+          rgba(0,0,0,0.7) 46%,
+          rgba(0,0,0,0.3) 64%,
+          transparent 82%
         );
         mask-image: radial-gradient(
-          ellipse 55% 55% at 50% 50%,
+          ellipse 60% 60% at 50% 50%,
           #000 0%,
-          #000 22%,
-          rgba(0,0,0,0.6) 40%,
-          rgba(0,0,0,0.2) 58%,
-          transparent 72%
+          #000 28%,
+          rgba(0,0,0,0.7) 46%,
+          rgba(0,0,0,0.3) 64%,
+          transparent 82%
         );
       }
     }
@@ -708,8 +708,8 @@
 
     @media (max-width: 768px) {
       .spylt-header-block { width: 85vw; min-width: unset; }
-      .spylt-image-only { width: 280px; }
-      .spylt-cards-track { gap: 32px; }
+      .spylt-image-only { width: min(76vw, 420px); }
+      .spylt-cards-track { gap: 40px; }
       .lifestyle-grid { grid-template-columns: 1fr; gap: 16px; padding: 60px 4%; }
       .statement-section { padding: 80px 5%; min-height: 70vh; min-height: 70dvh; }
       .statement-text { letter-spacing: -0.8px; }
@@ -731,8 +731,8 @@
       .hero-title-main { font-size: clamp(1.85rem, 8.5vw, 3.2rem); line-height: 1; }
       .hero-title-sub { letter-spacing: 0.15em; font-size: clamp(0.75rem, 2.5vw, 0.95rem); }
       .hero-banner-box { padding: 8px 16px; font-size: clamp(0.85rem, 3.2vw, 1.3rem); }
-      .spylt-image-only { width: 240px; }
-      .spylt-cards-track { gap: 24px; }
+      .spylt-image-only { width: min(80vw, 340px); }
+      .spylt-cards-track { gap: 30px; }
       .spylt-header-block { width: 90vw; margin-right: 4vw; }
       .statement-text { font-size: clamp(1.45rem, 6.5vw, 2.4rem); line-height: 1.2; }
       .history-title { font-size: clamp(2.4rem, 11vw, 3.8rem); }
@@ -743,7 +743,7 @@
 
     @media (max-width: 360px) {
       .hero-title-main { font-size: clamp(1.6rem, 8vw, 2.6rem); }
-      .spylt-image-only { width: 210px; }
+      .spylt-image-only { width: min(84vw, 300px); }
       .statement-text { font-size: clamp(1.3rem, 6vw, 2rem); }
     }
 
