@@ -423,10 +423,10 @@
       transform: translateZ(0);
     }
 
-        @media (max-width: 768px) {
+    @media (max-width: 768px) {
       .products-dynamic-bg {
-        width: 100vw;   /* antes 90vw */
-        height: 87vh;   /* antes 60vh */
+        width: 140vw;   /* ⬅️ más ancho horizontalmente */
+        height: 68vh;   /* ⬅️ vertical sin cambios */
         -webkit-mask-image: radial-gradient(
           ellipse 60% 60% at 50% 50%,
           #000 0%,
@@ -708,7 +708,7 @@
 
     @media (max-width: 768px) {
       .spylt-header-block { width: 85vw; min-width: unset; }
-      .spylt-image-only { width: min(76vw, 420px); }
+      .spylt-image-only { width: min(80vw, 460px); }
       .spylt-cards-track { gap: 40px; }
       .lifestyle-grid { grid-template-columns: 1fr; gap: 16px; padding: 60px 4%; }
       .statement-section { padding: 80px 5%; min-height: 70vh; min-height: 70dvh; }
@@ -731,7 +731,7 @@
       .hero-title-main { font-size: clamp(1.85rem, 8.5vw, 3.2rem); line-height: 1; }
       .hero-title-sub { letter-spacing: 0.15em; font-size: clamp(0.75rem, 2.5vw, 0.95rem); }
       .hero-banner-box { padding: 8px 16px; font-size: clamp(0.85rem, 3.2vw, 1.3rem); }
-      .spylt-image-only { width: min(80vw, 340px); }
+      .spylt-image-only { width: min(90vw, 420px); }
       .spylt-cards-track { gap: 30px; }
       .spylt-header-block { width: 90vw; margin-right: 4vw; }
       .statement-text { font-size: clamp(1.45rem, 6.5vw, 2.4rem); line-height: 1.2; }
@@ -743,7 +743,7 @@
 
     @media (max-width: 360px) {
       .hero-title-main { font-size: clamp(1.6rem, 8vw, 2.6rem); }
-      .spylt-image-only { width: min(84vw, 300px); }
+      .spylt-image-only { width: min(92vw, 360px); }
       .statement-text { font-size: clamp(1.3rem, 6vw, 2rem); }
     }
 
