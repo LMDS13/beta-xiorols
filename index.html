@@ -124,6 +124,7 @@
     }
 
     /* ===== FONDO ATMOSFÉRICO ULTRA LIGERO (CSS only – casi 0 GPU/CPU) ===== */
+    /* Solo transforms + opacity. Sin filter:blur, sin canvas, sin requestAnimationFrame */
     #bg-atmosphere {
       position: fixed;
       inset: 0;
@@ -176,6 +177,7 @@
       animation: atmosphereDrift3 24s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
     }
 
+    /* Movimiento orgánico y fluido (más pasos = más natural) */
     @keyframes atmosphereDrift1 {
       0%   { transform: translate3d(0%, 0%, 0) scale(1) rotate(0deg); }
       33%  { transform: translate3d(4%, 3%, 0) scale(1.06) rotate(1.5deg); }
@@ -194,6 +196,7 @@
       100% { transform: translate3d(3%, -3%, 0) scale(0.97) rotate(-1deg); }
     }
 
+    /* En móviles de gama baja reducimos un poco el tamaño para aún menos overdraw */
     @media (max-width: 768px) {
       #bg-atmosphere {
         opacity: 0.55;
@@ -203,12 +206,14 @@
       #bg-atmosphere .blob-3 { width: 45vmax; height: 45vmax; }
     }
 
+    /* Prefer reduced motion → completamente estático */
     @media (prefers-reduced-motion: reduce) {
       #bg-atmosphere .blob {
         animation: none !important;
       }
     }
 
+    /* HEADER TRANSPARENTE (SOLO LOGO, DESAPARECE AL SCROLL) */
     #site-header {
       position: absolute;
       top: 20px;
@@ -374,87 +379,31 @@
       height: 100dvh;
       min-height: -webkit-fill-available;
     }
-
-    /* ===== FONDO DINÁMICO OPTIMIZADO =====
-       Reemplazamos "filter: blur()" por "mask-image: radial-gradient()".
-       El blur es extremadamente costoso en móviles porque re-difumina los
-       píxeles en cada frame durante la transición. Con mask-image el GPU
-       compone una sola capa estática y solo anima el background-color
-       (operación muchísimo más barata). Visualmente idéntico. */
     .products-dynamic-bg {
       position: absolute;
       top: 50%;
       left: 50%;
       width: 70vw;
       height: 70vh;
-      transform: translate(-50%, -50%) translateZ(0);
+      transform: translate(-50%, -50%);
       border-radius: 50%;
-      pointer-events: none;
+      filter: blur(160px);
+      opacity: 1;
       z-index: 0;
-      background: transparent;
-      /* Máscara de difuminado estática: se rasteriza UNA sola vez */
-      -webkit-mask-image: radial-gradient(
-        ellipse 60% 60% at 50% 50%,
-        #000 0%,
-        #000 28%,
-        rgba(0,0,0,0.7) 45%,
-        rgba(0,0,0,0.3) 60%,
-        transparent 75%
-      );
-      mask-image: radial-gradient(
-        ellipse 60% 60% at 50% 50%,
-        #000 0%,
-        #000 28%,
-        rgba(0,0,0,0.7) 45%,
-        rgba(0,0,0,0.3) 60%,
-        transparent 75%
-      );
-      -webkit-mask-repeat: no-repeat;
-      mask-repeat: no-repeat;
-      -webkit-mask-size: 100% 100%;
-      mask-size: 100% 100%;
-      /* Aisla el repintado: los cambios de color del hijo no afectan al resto */
-      contain: paint layout;
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      /* Forzamos capa compuesta sin will-change agresivo */
-      will-change: auto;
-    }
-
-    .products-dynamic-bg__color {
-      position: absolute;
-      inset: 0;
       background-color: transparent;
       transition: background-color 0.9s var(--ease-out-expo);
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      transform: translateZ(0);
+      pointer-events: none;
+      will-change: background-color;
+      contain: layout paint;
     }
 
     @media (max-width: 768px) {
       .products-dynamic-bg {
         width: 90vw;
         height: 60vh;
-        /* En móvil la máscara es más suave y pequeña: menos overdraw */
-        -webkit-mask-image: radial-gradient(
-          ellipse 55% 55% at 50% 50%,
-          #000 0%,
-          #000 22%,
-          rgba(0,0,0,0.6) 40%,
-          rgba(0,0,0,0.2) 58%,
-          transparent 72%
-        );
-        mask-image: radial-gradient(
-          ellipse 55% 55% at 50% 50%,
-          #000 0%,
-          #000 22%,
-          rgba(0,0,0,0.6) 40%,
-          rgba(0,0,0,0.2) 58%,
-          transparent 72%
-        );
+        filter: blur(90px); /* mucho más barato en móvil */
       }
     }
-
     .spylt-scroll-container {
       display: flex;
       align-items: center;
@@ -764,6 +713,7 @@
       font-weight: 300;
     }
 
+    /* ===== PRELOADER ELEGANTE ===== */
     .preloader {
       position: fixed;
       top: 0; left: 0;
@@ -852,6 +802,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* ===== CURSOR PERSONALIZADO ===== */
     .custom-cursor {
       width: 32px; height: 32px;
       border: 1.5px solid rgba(43, 30, 26, 0.35);
@@ -891,6 +842,7 @@
       .custom-cursor, .custom-cursor-dot { display: none !important; }
     }
 
+    /* ===== TYPEWRITER ===== */
     .typewriter-text {
       display: inline;
     }
@@ -908,6 +860,7 @@
       50% { opacity: 0; }
     }
 
+    /* ===== IMAGE REVEAL ===== */
     .img-reveal-wrapper {
       position: relative;
       overflow: hidden;
@@ -937,11 +890,13 @@
       transform-origin: left;
     }
 
+    /* ===== COUNTER ===== */
     .counter-number {
       display: inline-block;
       font-variant-numeric: tabular-nums;
     }
 
+    /* ===== SCROLLBAR STYLING (para Lenis) ===== */
     html.lenis, html.lenis body {
       height: auto;
     }
@@ -960,15 +915,18 @@
   </style>
 </head>
 <body>
+  <!-- PRELOADER ELEGANTE -->
   <div class="preloader" id="preloader">
     <div class="preloader-logo">XIO <span>Rolls</span><div class="fill-mask"></div></div>
     <div class="preloader-sub">Preparando tu experiencia...</div>
     <div class="preloader-bar"></div>
   </div>
 
+  <!-- CURSOR PERSONALIZADO -->
   <div class="custom-cursor" id="custom-cursor"></div>
   <div class="custom-cursor-dot" id="custom-cursor-dot"></div>
 
+  <!-- Fondo atmosférico ultra ligero (CSS only) -->
   <div id="bg-atmosphere" aria-hidden="true">
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
@@ -1004,10 +962,7 @@
 
   <div class="pin-spacer">
     <section class="spylt-products-wrapper" id="menu">
-      <!-- El div interno __color permite animar solo el color sin repintar la máscara -->
-      <div class="products-dynamic-bg" aria-hidden="true">
-        <div class="products-dynamic-bg__color"></div>
-      </div>
+      <div class="products-dynamic-bg"></div>
       <div class="spylt-scroll-container" id="scroll-track">
         <div class="spylt-header-block">
           <h2 class="spylt-header-title">
@@ -1248,11 +1203,14 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
+      // ========== MOBILE / PERFORMANCE DETECTION ==========
       const isCoarse = window.matchMedia('(pointer: coarse)').matches;
       const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       const isMobile = isCoarse || isMobileUA || window.innerWidth < 768;
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+      // ========== LENIS SMOOTH SCROLL ==========
+      // Slightly higher lerp on mobile for stability and closer to 60fps feel
       const lenis = new Lenis({
         lerp: isMobile ? 0.12 : 0.08,
         smoothWheel: !isMobile,
@@ -1263,6 +1221,7 @@
       gsap.ticker.add((time) => lenis.raf(time * 1000));
       gsap.ticker.lagSmoothing(0);
 
+      // ========== PRELOADER ==========
       const preloader = document.getElementById('preloader');
       const heroMainEl = document.getElementById('hero-main');
       const heroSubEl = document.getElementById('hero-sub');
@@ -1272,6 +1231,7 @@
       function hidePreloader() {
         preloader.classList.add('hidden');
         lenis.start();
+        // Start hero video only after preloader is gone
         if (video) video.play().catch(() => {});
         initTypewriter();
       }
@@ -1281,6 +1241,7 @@
         hidePreloader();
       }, isMobile ? 2200 : 2800);
 
+      // ========== CURSOR PERSONALIZADO (solo fine pointer) ==========
       const cursor = document.getElementById('custom-cursor');
       const cursorDot = document.getElementById('custom-cursor-dot');
       if (!isCoarse && cursor && cursorDot) {
@@ -1314,6 +1275,7 @@
         });
       }
 
+      // ========== TYPEWRITER HERO ==========
       const typewriterTarget = document.getElementById('typewriter-target');
       const typewriterCursor = document.getElementById('typewriter-cursor');
       const mainText = "IRRESISTIBLEMENTE SUAVES";
@@ -1398,59 +1360,54 @@
         
       });
 
-      // ========== ACTIVE CARD + DYNAMIC BACKGROUND (OPTIMIZADO) ==========
-      const productCards = document.querySelectorAll('.product-card');
-      const dynamicBgColor = document.querySelector('.products-dynamic-bg__color');
-      const scrollTrack = document.getElementById("scroll-track");
+      // --- ACTIVE CARD ON CENTER + DYNAMIC BACKGROUND (optimizado) ---
+      const productCards = Array.from(document.querySelectorAll('.product-card'));
+      const dynamicBg = document.querySelector('.products-dynamic-bg');
+      let cardPositions = [];
+      let lastActiveIndex = -1;
 
-      // Estado global del carrusel: evita tocar el DOM si la tarjeta no ha cambiado
-      let currentActiveIndex = -1;
-      let cachedCardOffsets = []; // { left, width, color } por tarjeta
-
-      // Cacheamos las posiciones UNA sola vez (sin getBoundingClientRect)
-      // offsetLeft/offsetWidth no fuerza reflow como getBoundingClientRect
-      function cacheCardOffsets() {
-        cachedCardOffsets = [];
-        productCards.forEach((card) => {
-          cachedCardOffsets.push({
-            left: card.offsetLeft,
-            width: card.offsetWidth,
-            color: card.getAttribute('data-bg')
-          });
-        });
+      // Calcula las posiciones de las tarjetas UNA sola vez.
+      // Evita usar getBoundingClientRect() en cada frame de scroll, que forzaba
+      // un recálculo de layout constante y era la causa principal de los tirones en móvil.
+      function cacheCardPositions() {
+        cardPositions = productCards.map(card => ({
+          center: card.offsetLeft + card.offsetWidth / 2,
+          bg: card.getAttribute('data-bg')
+        }));
       }
 
-      // Solo actualizar el DOM cuando realmente cambia la tarjeta activa
-      function setActiveIndex(index) {
-        if (index === currentActiveIndex) return; // ⚡ guard: no hacer nada si es la misma
-        currentActiveIndex = index;
+      function updateActiveCard(currentX) {
+        if (!cardPositions.length) return;
+        const viewportCenter = (window.innerWidth / 2) - currentX;
+        let closestIndex = 0;
+        let minDistance = Infinity;
 
-        productCards.forEach((card, i) => {
-          if (i === index) card.classList.add('active-center');
-          else card.classList.remove('active-center');
-        });
+        for (let i = 0; i < cardPositions.length; i++) {
+          const distance = Math.abs(viewportCenter - cardPositions[i].center);
+          if (distance < minDistance) {
+            minDistance = distance;
+            closestIndex = i;
+          }
+        }
 
-        if (dynamicBgColor && cachedCardOffsets[index]) {
-          const color = cachedCardOffsets[index].color;
-          // Solo asignamos el color - la transición CSS se encarga del suavizado
-          dynamicBgColor.style.backgroundColor = color || 'transparent';
+        // Solo tocamos el DOM (clases + color de fondo con blur) si la
+        // tarjeta activa realmente cambió, en vez de en cada frame de scroll.
+        if (closestIndex !== lastActiveIndex) {
+          lastActiveIndex = closestIndex;
+          productCards.forEach((card, i) => {
+            card.classList.toggle('active-center', i === closestIndex);
+          });
+          if (dynamicBg) {
+            dynamicBg.style.backgroundColor = cardPositions[closestIndex].bg;
+          }
         }
       }
 
-      function clearDynamicBg() {
-        currentActiveIndex = -1;
-        productCards.forEach(card => card.classList.remove('active-center'));
-        if (dynamicBgColor) dynamicBgColor.style.backgroundColor = 'transparent';
-      }
-
       gsap.registerPlugin(ScrollTrigger);
-
-      if (scrollTrack) {
-        // Cacheamos después de que el layout esté listo
-        requestAnimationFrame(cacheCardOffsets);
-
-        // Recacheamos cuando ScrollTrigger invalida medidas (resize, fonts, etc.)
-        ScrollTrigger.addEventListener("refreshInit", cacheCardOffsets);
+      
+      const scrollTrack = document.getElementById("scroll-track");
+      if(scrollTrack) {
+        cacheCardPositions();
 
         gsap.to(scrollTrack, {
           x: () => -(scrollTrack.scrollWidth - window.innerWidth + 150),
@@ -1459,38 +1416,17 @@
             trigger: ".spylt-products-wrapper",
             start: "top top",
             end: () => `+=${scrollTrack.scrollWidth}`,
-            pin: true,
-            scrub: 1,
-            invalidateOnRefresh: true,
-            // Cálculo matemático puro: sin getBoundingClientRect, sin reflows
-            onUpdate: (self) => {
-              if (!cachedCardOffsets.length) return;
-
-              // Posición X del track basada en el progreso del scroll
-              const travel = scrollTrack.scrollWidth - window.innerWidth;
-              const trackX = self.progress * travel;
-              const viewportCenter = window.innerWidth / 2;
-              // Punto del track que coincide con el centro del viewport
-              const centerPoint = viewportCenter + trackX;
-
-              // Búsqueda simple del más cercano (operaciones aritméticas baratas)
-              let closestIndex = 0;
-              let minDistance = Infinity;
-              for (let i = 0; i < cachedCardOffsets.length; i++) {
-                const c = cachedCardOffsets[i];
-                const cardCenter = c.left + c.width / 2;
-                const dist = Math.abs(centerPoint - cardCenter);
-                if (dist < minDistance) {
-                  minDistance = dist;
-                  closestIndex = i;
-                }
-              }
-              setActiveIndex(closestIndex);
-            },
-            onLeave: clearDynamicBg,
-            onLeaveBack: clearDynamicBg,
-            onEnter: () => setActiveIndex(0),
-            onEnterBack: () => setActiveIndex(cachedCardOffsets.length - 1)
+            pin: true, scrub: 1, invalidateOnRefresh: true,
+            onUpdate: () => updateActiveCard(gsap.getProperty(scrollTrack, "x")),
+            onLeave: () => { if(dynamicBg) dynamicBg.style.backgroundColor = 'transparent'; },
+            onLeaveBack: () => { if(dynamicBg) dynamicBg.style.backgroundColor = 'transparent'; },
+            onEnter: () => updateActiveCard(gsap.getProperty(scrollTrack, "x")),
+            onEnterBack: () => updateActiveCard(gsap.getProperty(scrollTrack, "x")),
+            onRefresh: () => {
+              cacheCardPositions();
+              lastActiveIndex = -1;
+              updateActiveCard(gsap.getProperty(scrollTrack, "x"));
+            }
           }
         });
       }
@@ -1521,6 +1457,7 @@
         animate(info.target, { opacity: [0, 1], x: [100, 0], rotateY: [25, 0] }, { duration: 1.2, easing: [0.16, 1, 0.3, 1] });
       });
 
+      // ========== TILT 3D EN TARJETAS (solo desktop / fine pointer) ==========
       if (!isCoarse) {
         productCards.forEach(card => {
           card.addEventListener('mousemove', (e) => {
@@ -1539,6 +1476,7 @@
         });
       }
 
+      // ========== CONTADORES ANIMADOS ==========
       const counters = document.querySelectorAll('.counter-number');
       counters.forEach(counter => {
         const target = parseInt(counter.getAttribute('data-count'));
@@ -1562,6 +1500,7 @@
         );
       });
 
+      // ========== IMAGE REVEAL SCROLL ==========
       document.querySelectorAll('.img-reveal-wrapper').forEach(wrapper => {
         ScrollTrigger.create({
           trigger: wrapper,
@@ -1606,6 +1545,7 @@
       });
 
       const header = document.getElementById('site-header');
+      let lastScrollY = window.scrollY;
       let ticking = false;
 
       const updateHeader = () => {
@@ -1615,6 +1555,7 @@
         } else {
           header.style.opacity = '1';
         }
+        lastScrollY = currentScrollY;
         ticking = false;
       };
 
@@ -1627,16 +1568,11 @@
 
       updateHeader();
 
+      // Refresh ScrollTrigger after fonts/images settle (helps mobile layout & pin accuracy)
       if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(() => {
-          cacheCardOffsets(); // Recachea tras cargar fuentes
-          ScrollTrigger.refresh();
-        });
+        document.fonts.ready.then(() => ScrollTrigger.refresh());
       }
-      window.addEventListener("load", () => {
-        cacheCardOffsets();
-        ScrollTrigger.refresh();
-      }, { once: true });
+      window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
     });
   </script>
 </body>
