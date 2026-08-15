@@ -390,18 +390,23 @@
       filter: blur(160px);
       opacity: 1;
       z-index: 0;
+      pointer-events: none;
+      will-change: transform;
+    }
+    .products-dynamic-bg-color {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
       background-color: transparent;
       transition: background-color 0.9s var(--ease-out-expo);
-      pointer-events: none;
       will-change: background-color;
-      contain: layout paint;
     }
 
     @media (max-width: 768px) {
       .products-dynamic-bg {
         width: 90vw;
         height: 60vh;
-        filter: blur(90px); /* mucho más barato en móvil */
+        filter: blur(80px); /* mucho más barato en móvil */
       }
     }
     .spylt-scroll-container {
@@ -962,7 +967,9 @@
 
   <div class="pin-spacer">
     <section class="spylt-products-wrapper" id="menu">
-      <div class="products-dynamic-bg"></div>
+      <div class="products-dynamic-bg">
+        <div class="products-dynamic-bg-color"></div>
+      </div>
       <div class="spylt-scroll-container" id="scroll-track">
         <div class="spylt-header-block">
           <h2 class="spylt-header-title">
@@ -979,28 +986,28 @@
             <img alt="Rol Doble Crema" class="spylt-image-only" src="./img/rol (2).png" decoding="async" />
           </div>
           <div class="product-card" data-bg="#642B15">
-            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (3).png" loading="lazy" decoding="async" />
+            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (3).png" decoding="async" />
           </div>
           <div class="product-card" data-bg="#BD9EF4">
-            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (4).png" loading="lazy" decoding="async" />
+            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (4).png" decoding="async" />
           </div>
           <div class="product-card" data-bg="#CF805B">
-            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (5).png" loading="lazy" decoding="async" />
+            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (5).png" decoding="async" />
           </div>
           <div class="product-card" data-bg="#EED7B0">
-            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (6).png" loading="lazy" decoding="async" />
+            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (6).png" decoding="async" />
           </div>
           <div class="product-card" data-bg="#B97242">
-            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (7).png" loading="lazy" decoding="async" />
+            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (7).png" decoding="async" />
           </div>
           <div class="product-card" data-bg="#F1D4AD">
-            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (8).png" loading="lazy" decoding="async" />
+            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (8).png" decoding="async" />
           </div>
           <div class="product-card" data-bg="#C7835A">
-            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (9).png" loading="lazy" decoding="async" />
+            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (9).png" decoding="async" />
           </div>
           <div class="product-card" data-bg="#25766D">
-            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (10).png" loading="lazy" decoding="async" />
+            <img alt="Pack Familiar" class="spylt-image-only" src="./img/rol (10).png" decoding="async" />
           </div>
         </div>
       </div>
@@ -1210,16 +1217,21 @@
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       // ========== LENIS SMOOTH SCROLL ==========
-      // Slightly higher lerp on mobile for stability and closer to 60fps feel
-      const lenis = new Lenis({
-        lerp: isMobile ? 0.12 : 0.08,
-        smoothWheel: !isMobile,
-        syncTouch: true,
-        touchMultiplier: isMobile ? 1.2 : 1
-      });
-      lenis.on('scroll', ScrollTrigger.update);
-      gsap.ticker.add((time) => lenis.raf(time * 1000));
-      gsap.ticker.lagSmoothing(0);
+      let lenis = null;
+      if (!isMobile) {
+        lenis = new Lenis({
+          lerp: 0.08,
+          smoothWheel: true,
+          syncTouch: false,
+          touchMultiplier: 1
+        });
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => lenis.raf(time * 1000));
+        gsap.ticker.lagSmoothing(0);
+      } else {
+        // En móvil usamos scroll nativo
+        window.addEventListener('scroll', ScrollTrigger.update, { passive: true });
+      }
 
       // ========== PRELOADER ==========
       const preloader = document.getElementById('preloader');
@@ -1230,12 +1242,20 @@
 
       function hidePreloader() {
         preloader.classList.add('hidden');
-        lenis.start();
+        if (lenis) {
+          lenis.start();
+        } else {
+          document.body.style.overflow = '';
+        }
         // Start hero video only after preloader is gone
         if (video) video.play().catch(() => {});
         initTypewriter();
       }
-      lenis.stop();
+      if (lenis) {
+        lenis.stop();
+      } else {
+        document.body.style.overflow = 'hidden';
+      }
 
       setTimeout(() => {
         hidePreloader();
@@ -1360,73 +1380,85 @@
         
       });
 
-      // --- ACTIVE CARD ON CENTER + DYNAMIC BACKGROUND (optimizado) ---
-      const productCards = Array.from(document.querySelectorAll('.product-card'));
-      const dynamicBg = document.querySelector('.products-dynamic-bg');
-      let cardPositions = [];
-      let lastActiveIndex = -1;
+      // ========== ACTIVE CARD ON CENTER + DYNAMIC BACKGROUND ==========
+      const productCards = document.querySelectorAll('.product-card');
+      const dynamicBg = document.querySelector('.products-dynamic-bg-color'); // ahora apuntamos al hijo
 
-      // Calcula las posiciones de las tarjetas UNA sola vez.
-      // Evita usar getBoundingClientRect() en cada frame de scroll, que forzaba
-      // un recálculo de layout constante y era la causa principal de los tirones en móvil.
-      function cacheCardPositions() {
-        cardPositions = productCards.map(card => ({
-          center: card.offsetLeft + card.offsetWidth / 2,
-          bg: card.getAttribute('data-bg')
-        }));
+      let lastActiveCard = null;
+      let lastBgColor = null;
+      let cardCenters = [];
+      let scrollTrackOriginalLeft = 0;
+      let scrollDistance = 0;
+
+      const scrollTrack = document.getElementById("scroll-track");
+
+      function cacheCardData() {
+        if (!scrollTrack) return;
+        scrollTrackOriginalLeft = scrollTrack.offsetLeft;
+        const scrollTrackRect = scrollTrack.getBoundingClientRect();
+        cardCenters = [];
+        productCards.forEach(card => {
+          const cardRect = card.getBoundingClientRect();
+          const cardCenterRelative = cardRect.left + cardRect.width / 2 - scrollTrackRect.left;
+          cardCenters.push(cardCenterRelative);
+        });
+        scrollDistance = scrollTrack.scrollWidth - window.innerWidth + 150;
       }
 
-      function updateActiveCard(currentX) {
-        if (!cardPositions.length) return;
-        const viewportCenter = (window.innerWidth / 2) - currentX;
-        let closestIndex = 0;
-        let minDistance = Infinity;
-
-        for (let i = 0; i < cardPositions.length; i++) {
-          const distance = Math.abs(viewportCenter - cardPositions[i].center);
-          if (distance < minDistance) {
-            minDistance = distance;
-            closestIndex = i;
-          }
-        }
-
-        // Solo tocamos el DOM (clases + color de fondo con blur) si la
-        // tarjeta activa realmente cambió, en vez de en cada frame de scroll.
-        if (closestIndex !== lastActiveIndex) {
-          lastActiveIndex = closestIndex;
-          productCards.forEach((card, i) => {
-            card.classList.toggle('active-center', i === closestIndex);
-          });
-          if (dynamicBg) {
-            dynamicBg.style.backgroundColor = cardPositions[closestIndex].bg;
-          }
-        }
-      }
+      // Llamar al cargar y en cada refresh
+      cacheCardData();
 
       gsap.registerPlugin(ScrollTrigger);
-      
-      const scrollTrack = document.getElementById("scroll-track");
-      if(scrollTrack) {
-        cacheCardPositions();
 
+      if (scrollTrack) {
         gsap.to(scrollTrack, {
           x: () => -(scrollTrack.scrollWidth - window.innerWidth + 150),
           ease: "none",
+          force3D: true,
           scrollTrigger: {
             trigger: ".spylt-products-wrapper",
             start: "top top",
             end: () => `+=${scrollTrack.scrollWidth}`,
-            pin: true, scrub: 1, invalidateOnRefresh: true,
-            onUpdate: () => updateActiveCard(gsap.getProperty(scrollTrack, "x")),
+            pin: true,
+            scrub: isMobile ? 0.3 : 1,
+            invalidateOnRefresh: true,
+            anticipatePin: 1,
+            onUpdate: function(self) {
+              const progress = self.progress;
+              const scrollX = progress * scrollDistance;
+              const viewportCenter = window.innerWidth / 2;
+              let closestIndex = -1;
+              let minDistance = Infinity;
+
+              cardCenters.forEach((centerRelative, index) => {
+                const cardViewportCenter = scrollTrackOriginalLeft + centerRelative - scrollX;
+                const distance = Math.abs(viewportCenter - cardViewportCenter);
+                if (distance < minDistance) {
+                  minDistance = distance;
+                  closestIndex = index;
+                }
+              });
+
+              if (closestIndex >= 0) {
+                const closestCard = productCards[closestIndex];
+                if (closestCard !== lastActiveCard) {
+                  productCards.forEach(card => card.classList.remove('active-center'));
+                  closestCard.classList.add('active-center');
+                  lastActiveCard = closestCard;
+
+                  const bgColor = closestCard.getAttribute('data-bg');
+                  if (bgColor && bgColor !== lastBgColor) {
+                    dynamicBg.style.backgroundColor = bgColor;
+                    lastBgColor = bgColor;
+                  }
+                }
+              }
+            },
+            onRefresh: cacheCardData,
             onLeave: () => { if(dynamicBg) dynamicBg.style.backgroundColor = 'transparent'; },
             onLeaveBack: () => { if(dynamicBg) dynamicBg.style.backgroundColor = 'transparent'; },
-            onEnter: () => updateActiveCard(gsap.getProperty(scrollTrack, "x")),
-            onEnterBack: () => updateActiveCard(gsap.getProperty(scrollTrack, "x")),
-            onRefresh: () => {
-              cacheCardPositions();
-              lastActiveIndex = -1;
-              updateActiveCard(gsap.getProperty(scrollTrack, "x"));
-            }
+            onEnter: () => { cacheCardData(); },
+            onEnterBack: () => { cacheCardData(); }
           }
         });
       }
