@@ -416,6 +416,7 @@
 
     .products-dynamic-bg__color {
       position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
       inset: 0;
       background-color: transparent;
       transition: background-color 0.9s var(--ease-out-expo);
@@ -712,6 +713,7 @@
       .spylt-image-only { width: min(86vw, 540px); }
       .spylt-cards-track { gap: 36px; }
       .lifestyle-grid { grid-template-columns: 1fr; gap: 16px; padding: 60px 4%; }
+      .lifestyle-item { margin-top: 0 !important; }
       .statement-section { padding: 80px 5%; min-height: 100vh; min-height: 100dvh; }
       .statement-text { letter-spacing: -0.8px; }
       .badge-box { padding: 5px 14px; margin: 0 4px; font-size: 0.95em; }
@@ -1008,6 +1010,12 @@
   </style>
 </head>
 <body>
+  <noscript>
+    <style>
+      .preloader { display: none !important; }
+      #hero-sub, #hero-main, #hero-banner { opacity: 1 !important; }
+    </style>
+  </noscript>
   <div class="preloader" id="preloader">
     <div class="preloader-logo">XIO <span>Rolls</span><div class="fill-mask"></div></div>
     <div class="preloader-sub">Preparando tu experiencia...</div>
@@ -1029,7 +1037,7 @@
 
   <section class="hero">
     <div class="hero-video-container">
-      <video id="hero-video" muted playsinline webkit-playsinline preload="metadata" src="Cinnamon_rolls_emerge_float_drift_202607202209.mp4"></video>
+      <video id="hero-video" muted playsinline webkit-playsinline preload="metadata" src="video-hero.mp4"></video>
     </div>
     <div class="hero-content" id="hero-text">
       <div class="hero-title-sub" id="hero-sub">Horneados al momento • Creados con devoción</div>
@@ -1067,71 +1075,71 @@
           <div class="product-card" data-bg="#51AFF7">
             <div class="card-shadow" aria-hidden="true"></div>
             <img alt="Rol de Fresas con Crema" class="spylt-image-only"
-                 src="./img/img-large/rol (1)-large.webp"
-                 srcset="./img/img-moviles/rol (1).webp 560w, ./img/img-large/rol (1)-large.webp 1200w"
+                 src="./img/img-large/rol(1)-large.webp"
+                 srcset="./img/img-moviles/rol(1).webp 560w, ./img/img-large/rol(1)-large.webp 1200w"
                  sizes="(max-width: 768px) 96vw, 720px" decoding="async" />
           </div>
           <div class="product-card" data-bg="#EE7C62">
             <div class="card-shadow" aria-hidden="true"></div>
             <img alt="Rol Doble Crema" class="spylt-image-only"
-                 src="./img/img-large/rol (2)-large.webp"
-                 srcset="./img/img-moviles/rol (2).webp 560w, ./img/img-large/rol (2)-large.webp 1200w"
+                 src="./img/img-large/rol(2)-large.webp"
+                 srcset="./img/img-moviles/rol(2).webp 560w, ./img/img-large/rol(2)-large.webp 1200w"
                  sizes="(max-width: 768px) 96vw, 720px" decoding="async" />
           </div>
           <div class="product-card" data-bg="#642B15">
             <div class="card-shadow" aria-hidden="true"></div>
             <img alt="Pack Familiar" class="spylt-image-only"
-                 src="./img/img-large/rol (3)-large.webp"
-                 srcset="./img/img-moviles/rol (3).webp 560w, ./img/img-large/rol (3)-large.webp 1200w"
+                 src="./img/img-large/rol(3)-large.webp"
+                 srcset="./img/img-moviles/rol(3).webp 560w, ./img/img-large/rol(3)-large.webp 1200w"
                  sizes="(max-width: 768px) 96vw, 720px" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#BD9EF4">
             <div class="card-shadow" aria-hidden="true"></div>
             <img alt="Pack Familiar" class="spylt-image-only"
-                 src="./img/img-large/rol (4)-large.webp"
-                 srcset="./img/img-moviles/rol (4).webp 560w, ./img/img-large/rol (4)-large.webp 1200w"
+                 src="./img/img-large/rol(4)-large.webp"
+                 srcset="./img/img-moviles/rol(4).webp 560w, ./img/img-large/rol(4)-large.webp 1200w"
                  sizes="(max-width: 768px) 96vw, 720px" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#CF805B">
             <div class="card-shadow" aria-hidden="true"></div>
             <img alt="Pack Familiar" class="spylt-image-only"
-                 src="./img/img-large/rol (5)-large.webp"
-                 srcset="./img/img-moviles/rol (5).webp 560w, ./img/img-large/rol (5)-large.webp 1200w"
+                 src="./img/img-large/rol(5)-large.webp"
+                 srcset="./img/img-moviles/rol(5).webp 560w, ./img/img-large/rol(5)-large.webp 1200w"
                  sizes="(max-width: 768px) 96vw, 720px" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#EED7B0">
             <div class="card-shadow" aria-hidden="true"></div>
             <img alt="Pack Familiar" class="spylt-image-only"
-                 src="./img/img-large/rol (6)-large.webp"
-                 srcset="./img/img-moviles/rol (6).webp 560w, ./img/img-large/rol (6)-large.webp 1200w"
+                 src="./img/img-large/rol(6)-large.webp"
+                 srcset="./img/img-moviles/rol(6).webp 560w, ./img/img-large/rol(6)-large.webp 1200w"
                  sizes="(max-width: 768px) 96vw, 720px" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#B97242">
             <div class="card-shadow" aria-hidden="true"></div>
             <img alt="Pack Familiar" class="spylt-image-only"
-                 src="./img/img-large/rol (7)-large.webp"
-                 srcset="./img/img-moviles/rol (7).webp 560w, ./img/img-large/rol (7)-large.webp 1200w"
+                 src="./img/img-large/rol(7)-large.webp"
+                 srcset="./img/img-moviles/rol(7).webp 560w, ./img/img-large/rol(7)-large.webp 1200w"
                  sizes="(max-width: 768px) 96vw, 720px" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#F1D4AD">
             <div class="card-shadow" aria-hidden="true"></div>
             <img alt="Pack Familiar" class="spylt-image-only"
-                 src="./img/img-large/rol (8)-large.webp"
-                 srcset="./img/img-moviles/rol (8).webp 560w, ./img/img-large/rol (8)-large.webp 1200w"
+                 src="./img/img-large/rol(8)-large.webp"
+                 srcset="./img/img-moviles/rol(8).webp 560w, ./img/img-large/rol(8)-large.webp 1200w"
                  sizes="(max-width: 768px) 96vw, 720px" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#C7835A">
             <div class="card-shadow" aria-hidden="true"></div>
             <img alt="Pack Familiar" class="spylt-image-only"
-                 src="./img/img-large/rol (9)-large.webp"
-                 srcset="./img/img-moviles/rol (9).webp 560w, ./img/img-large/rol (9)-large.webp 1200w"
+                 src="./img/img-large/rol(9)-large.webp"
+                 srcset="./img/img-moviles/rol(9).webp 560w, ./img/img-large/rol(9)-large.webp 1200w"
                  sizes="(max-width: 768px) 96vw, 720px" loading="lazy" decoding="async" />
           </div>
           <div class="product-card" data-bg="#25766D">
             <div class="card-shadow" aria-hidden="true"></div>
             <img alt="Pack Familiar" class="spylt-image-only"
-                 src="./img/img-large/rol (10)-large.webp"
-                 srcset="./img/img-moviles/rol (10).webp 560w, ./img/img-large/rol (10)-large.webp 1200w"
+                 src="./img/img-large/rol(10)-large.webp"
+                 srcset="./img/img-moviles/rol(10).webp 560w, ./img/img-large/rol(10)-large.webp 1200w"
                  sizes="(max-width: 768px) 96vw, 720px" loading="lazy" decoding="async" />
           </div>
         </div>
@@ -1378,9 +1386,17 @@
       }
       lenis.stop();
 
-      setTimeout(() => {
-        hidePreloader();
-      }, isMobile ? 2200 : 2800);
+      // Preloader inteligente: animación mínima + recursos reales, con tope de seguridad
+      const minTime = new Promise(r => setTimeout(r, isMobile ? 2200 : 2400));
+      const resourcesReady = new Promise(resolve => {
+        const cap = setTimeout(resolve, 6000); // nunca atrapamos al usuario más de 6s
+        if (document.readyState === 'complete') {
+          clearTimeout(cap); resolve();
+        } else {
+          window.addEventListener('load', () => { clearTimeout(cap); resolve(); }, { once: true });
+        }
+      });
+      Promise.all([minTime, resourcesReady]).then(hidePreloader);
 
       const cursor = document.getElementById('custom-cursor');
       const cursorDot = document.getElementById('custom-cursor-dot');
