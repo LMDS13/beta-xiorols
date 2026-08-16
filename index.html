@@ -1443,6 +1443,9 @@
 
       document.querySelectorAll(".motion-reveal").forEach((el) => {
         const words = splitTextIntoWords(el);
+        // Si el bloque es más alto que el 75% de la pantalla, amount 0.55
+        // podría no cumplirse nunca en móviles pequeños → usamos 0.2 de respaldo.
+        const safeAmount = el.offsetHeight > window.innerHeight * 0.75 ? 0.2 : 0.55;
         inView(el, () => {
           animate(words, { opacity: [0, 1], y: [30, 0] },
             { 
@@ -1450,8 +1453,7 @@
                 delay: stagger(0.1),
                 easing: [0.22, 1, 0.36, 1] 
             });
-        }, {amount: 0.55,});
-        
+        }, { amount: safeAmount });
       });
 
       // ========== ACTIVE CARD + DYNAMIC BACKGROUND (OPTIMIZADO) ==========
