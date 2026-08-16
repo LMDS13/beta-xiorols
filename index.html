@@ -1349,10 +1349,10 @@
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       const lenis = new Lenis({
-        lerp: isMobile ? 0.12 : 0.08,
-        smoothWheel: !isMobile,
-        syncTouch: true,
-        touchMultiplier: isMobile ? 1.2 : 1
+        lerp: 0.08,
+        smoothWheel: !isMobile, // desktop: suaviza la rueda
+        syncTouch: false,       // móvil: scroll 100% nativo del sistema
+        touchMultiplier: 1
       });
       lenis.on('scroll', ScrollTrigger.update);
       gsap.ticker.add((time) => lenis.raf(time * 1000));
